@@ -52,7 +52,7 @@ The game includes multiple themes with their own visuals and music:
 - Bavarian Beer Hall
 - Shamrock
 - Classical
-- Scrabble
+- Board Game
 
 Music and pop sounds can be toggled separately from the title screen, so the game can be played with pops only, music only, both, or neither.
 

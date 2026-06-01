@@ -713,7 +713,7 @@ input {
   --multiplier-img: url("assets/luftblasen/images/classical/notemultiplier.png");
 }
 
-[data-theme="scrabble"] {
+[data-theme="boardgame"] {
   --accent: #9a5a08;
   --accent-strong: #6d3d00;
   --bubble: #df8a18;
@@ -723,11 +723,11 @@ input {
     url("assets/luftblasen/images/brownbackground.png");
 }
 
-[data-theme="scrabble"] .playfield {
+[data-theme="boardgame"] .playfield {
   background-size: auto, 180px 180px;
 }
 
-[data-theme="scrabble"] .bubble {
+[data-theme="boardgame"] .bubble {
   border-radius: 11px;
   background:
     radial-gradient(circle at 14% 14%, rgba(255, 250, 166, 0.9) 0 7%, transparent 8%),
@@ -741,7 +741,7 @@ input {
   text-shadow: none;
 }
 
-[data-theme="scrabble"] .bubble::after {
+[data-theme="boardgame"] .bubble::after {
   content: "1";
   position: absolute;
   right: 18%;
@@ -750,13 +750,13 @@ input {
   font-weight: 900;
 }
 
-[data-theme="scrabble"] .bubble.bonus {
+[data-theme="boardgame"] .bubble.bonus {
   background:
     radial-gradient(circle at 14% 14%, rgba(255, 255, 200, 0.92) 0 7%, transparent 8%),
     linear-gradient(145deg, #ffe071 0%, #e79b12 36%, #a75e00 72%, #ffd665 100%);
 }
 
-[data-theme="scrabble"] .bubble.multiplier {
+[data-theme="boardgame"] .bubble.multiplier {
   background:
     radial-gradient(circle at 14% 14%, rgba(255, 255, 220, 0.92) 0 7%, transparent 8%),
     linear-gradient(145deg, #ffd45f 0%, #bf6900 34%, #713500 74%, #ffbe35 100%);

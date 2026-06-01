@@ -38,7 +38,7 @@ const themeMusic = {
   classical: "assets/luftblasen/Music/Brandenburg_Concerto_No4.mp3",
   bavarian: "assets/luftblasen/Music/PT_16695.mp3",
   shamrock: "assets/luftblasen/Music/PT_7927.mp3",
-  scrabble: "assets/luftblasen/Music/PT_16695.mp3"
+  boardgame: "assets/luftblasen/Music/PT_16695.mp3"
 };
 
 const bubbleColors = ["#9ee2ff", "#b9efc4", "#d8c3ff", "#ffe08a", "#a9d8ff"];
