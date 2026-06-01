@@ -134,6 +134,26 @@ input {
   color: var(--accent-strong);
 }
 
+.sound-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 9px 12px;
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--accent-strong);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.sound-toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+
 .splash-theme {
   display: grid;
   place-items: center;

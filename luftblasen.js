@@ -15,12 +15,22 @@ const multiplierText = document.querySelector("#multiplier-text");
 const fieldMessage = document.querySelector("#field-message");
 const difficultyInput = document.querySelector("#difficulty");
 const difficultyName = document.querySelector("#difficulty-name");
+const soundToggle = document.querySelector("#sound-enabled");
 const pauseButton = document.querySelector("#pause-game");
 const shell = document.querySelector(".game-shell");
 const splashScreen = document.querySelector("#splash-screen");
 const startButton = document.querySelector("#start-game");
 const changeThemeButton = document.querySelector("#change-theme");
 const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
+const backgroundMusic = new Audio();
+
+const themeMusic = {
+  classic: "assets/luftblasen/Music/Brandenburg_Concerto_No4.mp3",
+  classical: "assets/luftblasen/Music/Brandenburg_Concerto_No4.mp3",
+  bavarian: "assets/luftblasen/Music/PT_16695.mp3",
+  shamrock: "assets/luftblasen/Music/PT_7927.mp3",
+  scrabble: "assets/luftblasen/Music/PT_16695.mp3"
+};
 
 const bubbleColors = ["#9ee2ff", "#b9efc4", "#d8c3ff", "#ffe08a", "#a9d8ff"];
 
@@ -38,6 +48,11 @@ let bubbleId = 1;
 let spawnTimer = 0;
 let lastFrame = 0;
 let started = false;
+let audioContext;
+
+backgroundMusic.loop = true;
+backgroundMusic.volume = 0.45;
+popSound.volume = 0.6;
 
 function startGame() {
   bubbles = [];
@@ -57,6 +72,7 @@ function startGame() {
   for (let index = 0; index < 9; index += 1) {
     spawnBubble();
   }
+  startThemeMusic();
   updateHud();
   setMessage("Pick bubbles that add exactly to the target. Only going over costs a life.");
 }
@@ -186,20 +202,79 @@ function clearSelection() {
   updateHud();
 }
 
-function popBubble(bubble) {
+function popBubble(bubble, withSound = true) {
   bubble.element.classList.add("popped");
   bubbles = bubbles.filter((item) => item.id !== bubble.id);
-  playPopSound();
+  if (withSound) {
+    playPopSound();
+  }
   window.setTimeout(() => bubble.element.remove(), 170);
 }
 
 function playPopSound() {
+  if (!soundEnabled()) {
+    return;
+  }
+  playSynthPop();
   try {
     popSound.currentTime = 0;
     popSound.play().catch(() => {});
   } catch {
     // Audio is optional; gameplay should never depend on it.
   }
+}
+
+function soundEnabled() {
+  return !soundToggle || soundToggle.checked;
+}
+
+function ensureAudioContext() {
+  const AudioCtor = window.AudioContext || window.webkitAudioContext;
+  if (!AudioCtor) {
+    return null;
+  }
+  if (!audioContext) {
+    audioContext = new AudioCtor();
+  }
+  if (audioContext.state === "suspended") {
+    audioContext.resume().catch(() => {});
+  }
+  return audioContext;
+}
+
+function playSynthPop() {
+  const context = ensureAudioContext();
+  if (!context) {
+    return;
+  }
+  const now = context.currentTime;
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  oscillator.type = "triangle";
+  oscillator.frequency.setValueAtTime(520, now);
+  oscillator.frequency.exponentialRampToValueAtTime(120, now + 0.08);
+  gain.gain.setValueAtTime(0.08, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+  oscillator.connect(gain).connect(context.destination);
+  oscillator.start(now);
+  oscillator.stop(now + 0.1);
+}
+
+function startThemeMusic() {
+  if (!soundEnabled()) {
+    pauseThemeMusic();
+    return;
+  }
+  const musicPath = themeMusic[shell.dataset.theme] || themeMusic.classic;
+  if (!backgroundMusic.src.endsWith(musicPath)) {
+    backgroundMusic.src = musicPath;
+  }
+  backgroundMusic.currentTime = 0;
+  backgroundMusic.play().catch(() => {});
+}
+
+function pauseThemeMusic() {
+  backgroundMusic.pause();
 }
 
 function selectedSum() {
@@ -263,7 +338,7 @@ function updateBubbles(delta) {
     bubble.element.style.top = `${bubble.y}px`;
 
     if (bubble.y < -bubble.size) {
-      popBubble(bubble);
+      popBubble(bubble, false);
       spawnBubble();
     }
   });
@@ -322,6 +397,14 @@ difficultyInput?.addEventListener("input", () => {
   updateDifficultyName();
 });
 
+soundToggle?.addEventListener("change", () => {
+  if (!soundEnabled()) {
+    pauseThemeMusic();
+  } else if (started && !paused && !gameOver) {
+    startThemeMusic();
+  }
+});
+
 pauseButton?.addEventListener("click", () => {
   if (gameOver) {
     return;
@@ -330,6 +413,11 @@ pauseButton?.addEventListener("click", () => {
   pauseButton.textContent = paused ? "Resume" : "Pause";
   pauseButton.setAttribute("aria-label", paused ? "Resume game" : "Pause game");
   pauseButton.title = paused ? "Resume" : "Pause";
+  if (paused) {
+    pauseThemeMusic();
+  } else {
+    startThemeMusic();
+  }
   setMessage(paused ? "Paused." : "Back in motion.");
 });
 
@@ -348,6 +436,7 @@ startButton?.addEventListener("click", () => {
 changeThemeButton?.addEventListener("click", () => {
   paused = true;
   started = false;
+  pauseThemeMusic();
   resetPauseButton();
   playfield.querySelectorAll(".bubble").forEach((bubble) => bubble.remove());
   bubbles = [];
