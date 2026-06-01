@@ -193,6 +193,13 @@ input {
   box-shadow: 0 14px 30px rgba(0, 93, 192, 0.22);
 }
 
+.splash-version {
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
 .hud {
   display: none;
 }
