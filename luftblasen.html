@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Luftblasen</title>
+    <link rel="stylesheet" href="luftblasen.css">
+  </head>
+  <body class="show-splash">
+    <main class="game-shell" data-theme="classic">
+      <section class="splash-screen" id="splash-screen" aria-labelledby="splash-title">
+        <div class="splash-brand">
+          <h1 id="splash-title">Luftblasen</h1>
+          <p>Choose a theme, then pop bubbles to add exactly to the target.</p>
+        </div>
+        <div class="splash-theme-grid" id="splash-theme-list" aria-label="Choose theme">
+          <button class="splash-theme active" type="button" data-theme="classic">
+            <span class="theme-icon bubble-icon"></span>
+            <strong>Classic</strong>
+          </button>
+          <button class="splash-theme" type="button" data-theme="bavarian">
+            <span class="theme-icon">🍺</span>
+            <strong>Bavarian</strong>
+          </button>
+          <button class="splash-theme" type="button" data-theme="shamrock">
+            <span class="theme-icon">☘</span>
+            <strong>Shamrock</strong>
+          </button>
+          <button class="splash-theme" type="button" data-theme="classical">
+            <span class="theme-icon">♬</span>
+            <strong>Classical</strong>
+          </button>
+          <button class="splash-theme" type="button" data-theme="scrabble">
+            <span class="theme-icon tile-icon">A</span>
+            <strong>Scrabble</strong>
+          </button>
+        </div>
+        <label class="splash-difficulty" for="difficulty">
+          <span>Difficulty</span>
+          <input id="difficulty" type="range" min="1" max="5" value="3">
+          <small><b>Easy</b><strong id="difficulty-name">Medium</strong><b>Hard</b></small>
+        </label>
+        <button class="start-button" id="start-game" type="button">Start Game</button>
+      </section>
+
+      <section class="hud" aria-label="Game stats">
+        <div class="hud-card target-card">
+          <span>Target</span>
+          <strong id="target-total">18</strong>
+        </div>
+        <div class="hud-card sum-card">
+          <span>Current Sum</span>
+          <strong id="current-sum">0</strong>
+          <div class="sum-meter" aria-hidden="true"><i id="sum-meter"></i></div>
+          <em id="remaining-total">18 to go</em>
+        </div>
+        <div class="hud-card compact">
+          <span>Score</span>
+          <strong id="score">0</strong>
+        </div>
+        <div class="hud-card compact">
+          <span>Round</span>
+          <strong id="round">1</strong>
+        </div>
+        <div class="hud-card compact">
+          <span>Lives</span>
+          <strong id="lives">3</strong>
+        </div>
+      </section>
+
+      <section class="layout">
+        <aside class="side-panel controls-panel" aria-label="Controls">
+          <div class="button-grid">
+            <button class="secondary-button" id="pause-game" type="button">Pause</button>
+            <button class="secondary-button" id="change-theme" type="button">Change Theme</button>
+            <button class="primary-button" id="new-game" type="button">New Game</button>
+          </div>
+          <div class="control-status">
+            <div class="bonus-card" id="bonus-card">
+              <span>Multiplier</span>
+              <strong id="multiplier-text">1x</strong>
+            </div>
+            <button class="secondary-button" id="clear-selection" type="button">Reset Sum</button>
+          </div>
+        </aside>
+
+        <section class="play-card">
+          <div class="playfield" id="playfield" aria-label="Bubble play field">
+            <div class="field-hud" aria-hidden="true">
+              <div class="field-stat target-stat">
+                <span>Target</span>
+                <strong id="field-target-total">18</strong>
+              </div>
+              <div class="field-stat">
+                <span>Current</span>
+                <strong id="field-current-sum">0</strong>
+              </div>
+              <div class="field-stat">
+                <span>Score</span>
+                <strong id="field-score">0</strong>
+              </div>
+              <div class="field-stat small">
+                <span>Round</span>
+                <strong id="field-round">1</strong>
+              </div>
+              <div class="field-stat lives-stat">
+                <span>Lives</span>
+                <strong id="field-lives">♥♥♥♥♥</strong>
+              </div>
+            </div>
+            <div class="field-message" id="field-message">Pick bubbles that add to the target.</div>
+          </div>
+        </section>
+
+      </section>
+    </main>
+
+    <script src="luftblasen.js"></script>
+  </body>
+</html>
