@@ -34,7 +34,7 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/Brandenburg_Concerto_No4.mp3",
+  classic: "assets/luftblasen/Music/classic-theme.mp3",
   classical: "assets/luftblasen/Music/Brandenburg_Concerto_No4.mp3",
   bavarian: "assets/luftblasen/Music/PT_16695.mp3",
   shamrock: "assets/luftblasen/Music/PT_7927.mp3",

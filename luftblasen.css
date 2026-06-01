@@ -10,7 +10,7 @@
   --danger: #e94040;
   --gold: #f2a51a;
   --bubble: #d7f1ff;
-  --play-bg: linear-gradient(135deg, rgba(117, 200, 244, 0.38), rgba(215, 244, 255, 0.9));
+  --play-bg: url("assets/luftblasen/images/backgrounds/classic-theme-background.png");
   --bubble-img: url("assets/luftblasen/images/bubble.png");
   --bonus-img: url("assets/luftblasen/images/bubblebonus.png");
   --multiplier-img: url("assets/luftblasen/images/bubblemultiplier.png");
@@ -688,7 +688,7 @@ input {
   --accent-strong: #064aa5;
   --bubble: #ffe0a4;
   --gold: #f0a000;
-  --play-bg: url("assets/luftblasen/images/beerhallbackground.png");
+  --play-bg: url("assets/luftblasen/images/backgrounds/bavarian-theme-background.png");
 }
 
 [data-theme="shamrock"] {
@@ -696,7 +696,7 @@ input {
   --accent-strong: #07643a;
   --bubble: #c9f7dc;
   --gold: #20b66b;
-  --play-bg: url("assets/luftblasen/images/greenbackground.png");
+  --play-bg: url("assets/luftblasen/images/backgrounds/shamrock-theme-background.png");
   --bubble-img: url("assets/luftblasen/images/stpatrick/shamrock.png");
   --bonus-img: url("assets/luftblasen/images/stpatrick/shamrockbonus.png");
   --multiplier-img: url("assets/luftblasen/images/stpatrick/shamrockmultiplier.png");
@@ -707,7 +707,7 @@ input {
   --accent-strong: #5b2ea0;
   --bubble: #eadbff;
   --gold: #d49a2a;
-  --play-bg: url("assets/luftblasen/images/classical/classicalbackground.png");
+  --play-bg: url("assets/luftblasen/images/backgrounds/classical-music-background.png");
   --bubble-img: url("assets/luftblasen/images/classical/note.png");
   --bonus-img: url("assets/luftblasen/images/classical/notebonus.png");
   --multiplier-img: url("assets/luftblasen/images/classical/notemultiplier.png");
@@ -718,13 +718,11 @@ input {
   --accent-strong: #6d3d00;
   --bubble: #df8a18;
   --gold: #c57500;
-  --play-bg:
-    linear-gradient(rgba(244, 214, 160, 0.72), rgba(133, 75, 20, 0.42)),
-    url("assets/luftblasen/images/brownbackground.png");
+  --play-bg: url("assets/luftblasen/images/backgrounds/board-game-theme-background.png");
 }
 
 [data-theme="boardgame"] .playfield {
-  background-size: auto, 180px 180px;
+  background-size: cover;
 }
 
 [data-theme="boardgame"] .bubble {
