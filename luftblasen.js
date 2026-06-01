@@ -24,6 +24,12 @@ const shell = document.querySelector(".game-shell");
 const splashScreen = document.querySelector("#splash-screen");
 const startButton = document.querySelector("#start-game");
 const changeThemeButton = document.querySelector("#change-theme");
+const endScreen = document.querySelector("#end-screen");
+const endScore = document.querySelector("#end-score");
+const endTime = document.querySelector("#end-time");
+const endRound = document.querySelector("#end-round");
+const playAgainButton = document.querySelector("#play-again");
+const endChangeThemeButton = document.querySelector("#end-change-theme");
 const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
@@ -54,6 +60,7 @@ let started = false;
 let audioContext;
 let roundTimeLimit = 12000;
 let roundTimeRemaining = 12000;
+let activePlayTime = 0;
 
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.45;
@@ -70,10 +77,12 @@ function startGame() {
   paused = false;
   gameOver = false;
   started = true;
+  activePlayTime = 0;
   bubbleId = 1;
   spawnTimer = 0;
   target = rollTarget();
   resetRoundTimer();
+  hideEndScreen();
   playfield.querySelectorAll(".bubble").forEach((bubble) => bubble.remove());
   for (let index = 0; index < 9; index += 1) {
     spawnBubble();
@@ -152,13 +161,15 @@ function selectBubble(id) {
   if (bubble.isMultiplier) {
     multiplier = bubble.value;
     multiplierTurns = 3;
+    const reward = addPopTime(bubble);
     popBubble(bubble);
-    setMessage(`${bubble.value}x multiplier active for the next three exact sums.`);
+    setMessage(`${bubble.value}x multiplier active. +${formatReward(reward)} seconds.`);
     updateHud();
     return;
   }
 
   selected.push({ value: bubble.value, isBonus: bubble.isBonus });
+  const reward = addPopTime(bubble);
   popBubble(bubble);
   const sum = selectedSum();
 
@@ -172,7 +183,7 @@ function selectBubble(id) {
     return;
   }
 
-  setMessage(`${target - sum} to go.`);
+  setMessage(`${target - sum} to go. +${formatReward(reward)} seconds.`);
   updateHud();
 }
 
@@ -208,6 +219,7 @@ function loseLife(reason) {
     paused = true;
     pauseThemeMusic();
     setMessage(`Game over. Final score: ${score.toLocaleString()}.`);
+    showEndScreen();
   } else {
     resetRoundTimer();
     setMessage(`${reason} ${lives} ${lives === 1 ? "life" : "lives"} left.`);
@@ -228,6 +240,25 @@ function popBubble(bubble, withSound = true) {
     playPopSound();
   }
   window.setTimeout(() => bubble.element.remove(), 170);
+}
+
+function addPopTime(bubble) {
+  const reward = timeRewardForBubble(bubble);
+  const maxTime = roundTimeLimit * 1.35;
+  roundTimeRemaining = Math.min(maxTime, roundTimeRemaining + reward);
+  return reward;
+}
+
+function timeRewardForBubble(bubble) {
+  const difficulty = Number(difficultyInput.value);
+  const normalRewards = [0, 1250, 1050, 850, 700, 550];
+  const multiplierRewards = [0, 2800, 2350, 1900, 1550, 1250];
+  const base = bubble.isMultiplier ? multiplierRewards[difficulty] : normalRewards[difficulty];
+  return bubble.isBonus ? Math.round(base * 1.35) : base;
+}
+
+function formatReward(milliseconds) {
+  return (milliseconds / 1000).toFixed(milliseconds % 1000 === 0 ? 0 : 1);
 }
 
 function playPopSound() {
@@ -337,6 +368,7 @@ function tick(timestamp) {
   lastFrame = timestamp;
 
   if (started && !paused && !gameOver) {
+    activePlayTime += delta;
     roundTimeRemaining -= delta;
     if (roundTimeRemaining <= 0) {
       roundTimeRemaining = 0;
@@ -355,6 +387,27 @@ function tick(timestamp) {
   }
 
   window.requestAnimationFrame(tick);
+}
+
+function showEndScreen() {
+  if (!endScreen) {
+    return;
+  }
+  endScore.textContent = score.toLocaleString();
+  endTime.textContent = formatPlayTime(activePlayTime);
+  endRound.textContent = round;
+  endScreen.classList.remove("hidden");
+}
+
+function hideEndScreen() {
+  endScreen?.classList.add("hidden");
+}
+
+function formatPlayTime(milliseconds) {
+  const totalSeconds = Math.max(0, Math.floor(milliseconds / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
 function updateBubbles(delta) {
@@ -466,6 +519,19 @@ startButton?.addEventListener("click", () => {
 });
 
 changeThemeButton?.addEventListener("click", () => {
+  exitToSplash();
+});
+
+playAgainButton?.addEventListener("click", () => {
+  resetPauseButton();
+  startGame();
+});
+
+endChangeThemeButton?.addEventListener("click", () => {
+  exitToSplash();
+});
+
+function exitToSplash() {
   paused = true;
   started = false;
   pauseThemeMusic();
@@ -473,9 +539,10 @@ changeThemeButton?.addEventListener("click", () => {
   playfield.querySelectorAll(".bubble").forEach((bubble) => bubble.remove());
   bubbles = [];
   selected = [];
+  hideEndScreen();
   splashScreen.classList.remove("hidden");
   document.body.classList.add("show-splash");
-});
+}
 
 window.selectBubble = selectBubble;
 

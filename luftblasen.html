@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no">
     <title>Luftblasen</title>
-    <link rel="stylesheet" href="luftblasen.css?v=20260601-1439">
+    <link rel="stylesheet" href="luftblasen.css?v=20260601-1449">
   </head>
   <body class="show-splash">
     <main class="game-shell" data-theme="classic">
@@ -52,7 +52,7 @@
           </label>
         </div>
         <button class="start-button" id="start-game" type="button">Start Game</button>
-        <footer class="splash-version">v<span data-version>20260601-1439</span></footer>
+        <footer class="splash-version">v<span data-version>20260601-1449</span></footer>
       </section>
 
       <section class="hud" aria-label="Game stats">
@@ -119,12 +119,35 @@
               <strong id="multiplier-text">1x</strong>
             </div>
             <div class="field-message" id="field-message">Pick bubbles that add to the target.</div>
+            <div class="end-screen hidden" id="end-screen" role="dialog" aria-modal="true" aria-labelledby="end-title">
+              <div class="end-panel">
+                <h2 id="end-title">Game Over</h2>
+                <dl class="end-stats">
+                  <div>
+                    <dt>Score</dt>
+                    <dd id="end-score">0</dd>
+                  </div>
+                  <div>
+                    <dt>Time</dt>
+                    <dd id="end-time">0:00</dd>
+                  </div>
+                  <div>
+                    <dt>Round</dt>
+                    <dd id="end-round">1</dd>
+                  </div>
+                </dl>
+                <div class="end-actions">
+                  <button class="end-primary" id="play-again" type="button">Play Again</button>
+                  <button class="end-secondary" id="end-change-theme" type="button">Theme</button>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
       </section>
     </main>
 
-    <script src="luftblasen.js?v=20260601-1439"></script>
+    <script src="luftblasen.js?v=20260601-1449"></script>
   </body>
 </html>
