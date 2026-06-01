@@ -301,6 +301,15 @@ function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function resetPauseButton() {
+  if (!pauseButton) {
+    return;
+  }
+  pauseButton.textContent = "Pause";
+  pauseButton.setAttribute("aria-label", "Pause game");
+  pauseButton.title = "Pause";
+}
+
 document.querySelectorAll(".splash-theme").forEach((button) => {
   button.addEventListener("click", () => {
     document.querySelectorAll(".splash-theme").forEach((theme) => theme.classList.remove("active"));
@@ -309,11 +318,11 @@ document.querySelectorAll(".splash-theme").forEach((button) => {
   });
 });
 
-difficultyInput.addEventListener("input", () => {
+difficultyInput?.addEventListener("input", () => {
   updateDifficultyName();
 });
 
-pauseButton.addEventListener("click", () => {
+pauseButton?.addEventListener("click", () => {
   if (gameOver) {
     return;
   }
@@ -329,21 +338,17 @@ function updateDifficultyName() {
   difficultyName.textContent = names[Number(difficultyInput.value)];
 }
 
-startButton.addEventListener("click", () => {
+startButton?.addEventListener("click", () => {
   splashScreen.classList.add("hidden");
   document.body.classList.remove("show-splash");
-  pauseButton.textContent = "Pause";
-  pauseButton.setAttribute("aria-label", "Pause game");
-  pauseButton.title = "Pause";
+  resetPauseButton();
   startGame();
 });
 
-changeThemeButton.addEventListener("click", () => {
+changeThemeButton?.addEventListener("click", () => {
   paused = true;
   started = false;
-  pauseButton.textContent = "Pause";
-  pauseButton.setAttribute("aria-label", "Pause game");
-  pauseButton.title = "Pause";
+  resetPauseButton();
   playfield.querySelectorAll(".bubble").forEach((bubble) => bubble.remove());
   bubbles = [];
   selected = [];
