@@ -18,3 +18,24 @@ index.html
 ```
 
 No build step or package install is required.
+
+## Release Stamp
+
+The repo includes a pre-commit hook that updates the release stamp automatically before each commit.
+
+Enable it once per local clone:
+
+```powershell
+git config core.hooksPath .githooks
+```
+
+After that, every `git commit` runs:
+
+```powershell
+scripts/update-release.ps1
+```
+
+The script updates:
+
+- all `?v=...` cache-busting query strings in `index.html` and `luftblasen.html`
+- the visible splash screen `data-version` stamp
