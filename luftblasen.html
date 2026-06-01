@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no">
     <title>Luftblasen</title>
-    <link rel="stylesheet" href="luftblasen.css?v=20260601-1429">
+    <link rel="stylesheet" href="luftblasen.css?v=20260601-1439">
   </head>
   <body class="show-splash">
     <main class="game-shell" data-theme="classic">
@@ -41,12 +41,18 @@
           <input id="difficulty" type="range" min="1" max="5" value="3">
           <small><b>Easy</b><strong id="difficulty-name">Medium</strong><b>Hard</b></small>
         </label>
-        <label class="sound-toggle" for="sound-enabled">
-          <input id="sound-enabled" type="checkbox" checked>
-          <span>Sound</span>
-        </label>
+        <div class="sound-options" aria-label="Audio options">
+          <label class="sound-toggle" for="music-enabled">
+            <input id="music-enabled" type="checkbox" checked>
+            <span>Music</span>
+          </label>
+          <label class="sound-toggle" for="pops-enabled">
+            <input id="pops-enabled" type="checkbox" checked>
+            <span>Pops</span>
+          </label>
+        </div>
         <button class="start-button" id="start-game" type="button">Start Game</button>
-        <footer class="splash-version">v<span data-version>20260601-1429</span></footer>
+        <footer class="splash-version">v<span data-version>20260601-1439</span></footer>
       </section>
 
       <section class="hud" aria-label="Game stats">
@@ -119,6 +125,6 @@
       </section>
     </main>
 
-    <script src="luftblasen.js?v=20260601-1429"></script>
+    <script src="luftblasen.js?v=20260601-1439"></script>
   </body>
 </html>

@@ -17,7 +17,8 @@ const multiplierText = document.querySelector("#multiplier-text");
 const fieldMessage = document.querySelector("#field-message");
 const difficultyInput = document.querySelector("#difficulty");
 const difficultyName = document.querySelector("#difficulty-name");
-const soundToggle = document.querySelector("#sound-enabled");
+const musicToggle = document.querySelector("#music-enabled");
+const popsToggle = document.querySelector("#pops-enabled");
 const pauseButton = document.querySelector("#pause-game");
 const shell = document.querySelector(".game-shell");
 const splashScreen = document.querySelector("#splash-screen");
@@ -230,7 +231,7 @@ function popBubble(bubble, withSound = true) {
 }
 
 function playPopSound() {
-  if (!soundEnabled()) {
+  if (!popsEnabled()) {
     return;
   }
   playSynthPop();
@@ -242,8 +243,12 @@ function playPopSound() {
   }
 }
 
-function soundEnabled() {
-  return !soundToggle || soundToggle.checked;
+function musicEnabled() {
+  return !musicToggle || musicToggle.checked;
+}
+
+function popsEnabled() {
+  return !popsToggle || popsToggle.checked;
 }
 
 function ensureAudioContext() {
@@ -279,7 +284,7 @@ function playSynthPop() {
 }
 
 function startThemeMusic() {
-  if (!soundEnabled()) {
+  if (!musicEnabled()) {
     pauseThemeMusic();
     return;
   }
@@ -424,8 +429,8 @@ difficultyInput?.addEventListener("input", () => {
   updateDifficultyName();
 });
 
-soundToggle?.addEventListener("change", () => {
-  if (!soundEnabled()) {
+musicToggle?.addEventListener("change", () => {
+  if (!musicEnabled()) {
     pauseThemeMusic();
   } else if (started && !paused && !gameOver) {
     startThemeMusic();

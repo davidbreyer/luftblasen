@@ -134,6 +134,13 @@ input {
   color: var(--accent-strong);
 }
 
+.sound-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
 .sound-toggle {
   display: inline-flex;
   align-items: center;
