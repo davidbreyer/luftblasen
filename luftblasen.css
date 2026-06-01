@@ -596,6 +596,65 @@ input {
   line-height: 1;
 }
 
+.field-announcement {
+  position: absolute;
+  left: 50%;
+  top: 43%;
+  z-index: 7;
+  display: grid;
+  min-width: 168px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: var(--radius);
+  padding: 12px 18px 14px;
+  background: rgba(8, 28, 54, 0.82);
+  color: white;
+  box-shadow: 0 18px 40px rgba(5, 25, 48, 0.28);
+  opacity: 0;
+  pointer-events: none;
+  text-align: center;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.36);
+  transform: translate(-50%, -50%) scale(0.92);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.field-announcement.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.field-announcement.hidden {
+  display: none;
+}
+
+.field-announcement span {
+  display: block;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.field-announcement strong {
+  display: block;
+  margin-top: 5px;
+  color: #ffe08a;
+  font-size: clamp(2.4rem, 10vw, 4.5rem);
+  font-weight: 950;
+  line-height: 0.92;
+}
+
+.field-announcement.alert strong {
+  color: #ff8a7a;
+  font-size: clamp(2rem, 8vw, 3.7rem);
+}
+
+.field-announcement.success strong {
+  color: #81f0a6;
+}
+
 .field-stat {
   min-width: 0;
   border: 1px solid rgba(255, 255, 255, 0.34);
@@ -825,6 +884,12 @@ input {
   .field-message {
     bottom: 10px;
     padding: 10px 12px;
+  }
+
+  .field-announcement {
+    top: 46%;
+    min-width: 150px;
+    padding: 10px 15px 12px;
   }
 
   .end-panel {

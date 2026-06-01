@@ -15,6 +15,9 @@ const roundText = document.querySelector("#round");
 const livesText = document.querySelector("#lives");
 const multiplierText = document.querySelector("#multiplier-text");
 const fieldMessage = document.querySelector("#field-message");
+const fieldAnnouncement = document.querySelector("#field-announcement");
+const announcementKicker = document.querySelector("#announcement-kicker");
+const announcementValue = document.querySelector("#announcement-value");
 const difficultyInput = document.querySelector("#difficulty");
 const difficultyName = document.querySelector("#difficulty-name");
 const musicToggle = document.querySelector("#music-enabled");
@@ -61,6 +64,7 @@ let audioContext;
 let roundTimeLimit = 12000;
 let roundTimeRemaining = 12000;
 let activePlayTime = 0;
+let announcementTimer;
 
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.45;
@@ -90,6 +94,7 @@ function startGame() {
   startThemeMusic();
   updateHud();
   setMessage("Pick bubbles that add exactly to the target. Only going over costs a life.");
+  announceTarget("Target");
 }
 
 function rollTarget() {
@@ -208,6 +213,7 @@ function scoreExactSum() {
     spawnBubble(true);
   }
   setMessage(`Exact! +${points.toLocaleString()} points. New target ready.`);
+  announceBoard("Next Target", target, "success");
   updateHud();
 }
 
@@ -223,6 +229,8 @@ function loseLife(reason) {
   } else {
     resetRoundTimer();
     setMessage(`${reason} ${lives} ${lives === 1 ? "life" : "lives"} left.`);
+    const kicker = reason.startsWith("Time up") ? "Time Up" : reason.startsWith("Too high") ? "Too High" : "Try Again";
+    announceBoard(kicker, `Try ${target}`, "alert");
   }
   updateHud();
 }
@@ -358,6 +366,29 @@ function updateHud() {
 
 function setMessage(text) {
   fieldMessage.textContent = text;
+}
+
+function announceTarget(kicker = "Target") {
+  announceBoard(kicker, target);
+}
+
+function announceBoard(kicker, value, tone = "") {
+  if (!fieldAnnouncement) {
+    return;
+  }
+  window.clearTimeout(announcementTimer);
+  announcementKicker.textContent = kicker;
+  announcementValue.textContent = value;
+  fieldAnnouncement.className = `field-announcement ${tone}`.trim();
+  window.requestAnimationFrame(() => {
+    fieldAnnouncement.classList.add("show");
+  });
+  announcementTimer = window.setTimeout(() => {
+    fieldAnnouncement.classList.remove("show");
+    announcementTimer = window.setTimeout(() => {
+      fieldAnnouncement.classList.add("hidden");
+    }, 180);
+  }, 1150);
 }
 
 function tick(timestamp) {
