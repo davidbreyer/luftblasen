@@ -402,9 +402,31 @@ input {
   right: 9px;
   z-index: 5;
   display: grid;
-  grid-template-columns: 1.15fr 1fr 1fr 0.72fr 1fr;
+  grid-template-columns: 1.15fr 1fr 1fr 0.72fr 1fr 0.72fr;
   gap: 6px;
   pointer-events: none;
+}
+
+.field-timer {
+  position: absolute;
+  top: 68px;
+  left: 10px;
+  right: 10px;
+  z-index: 5;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+  pointer-events: none;
+}
+
+.field-timer i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--good), var(--gold));
+  transform-origin: left center;
 }
 
 .field-controls {
@@ -500,7 +522,8 @@ input {
 }
 
 .field-stat.small strong,
-.lives-stat strong {
+.lives-stat strong,
+.timer-stat strong {
   font-size: 1.05rem;
 }
 
@@ -659,6 +682,12 @@ input {
     gap: 5px;
   }
 
+  .field-timer {
+    top: 122px;
+    left: 8px;
+    right: 8px;
+  }
+
   .field-stat {
     padding: 5px 7px;
   }
@@ -676,7 +705,8 @@ input {
   }
 
   .field-stat.small strong,
-  .lives-stat strong {
+  .lives-stat strong,
+  .timer-stat strong {
     font-size: 0.96rem;
   }
 
@@ -686,7 +716,7 @@ input {
   }
 
   .field-controls {
-    top: 106px;
+    top: 137px;
     right: 8px;
     bottom: auto;
     gap: 5px;
@@ -700,7 +730,7 @@ input {
   }
 
   .field-multiplier {
-    top: 106px;
+    top: 137px;
     left: 8px;
     bottom: auto;
     min-width: 76px;

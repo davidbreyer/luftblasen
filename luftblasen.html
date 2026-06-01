@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Luftblasen</title>
-    <link rel="stylesheet" href="luftblasen-20260601.css">
+    <link rel="stylesheet" href="luftblasen-20260601-timer.css">
   </head>
   <body class="show-splash">
     <main class="game-shell" data-theme="classic">
@@ -96,7 +96,12 @@
                 <span>Lives</span>
                 <strong id="field-lives">♥♥♥♥♥</strong>
               </div>
+              <div class="field-stat small timer-stat">
+                <span>Time</span>
+                <strong id="field-time">12</strong>
+              </div>
             </div>
+            <div class="field-timer" aria-hidden="true"><i id="field-timer-bar"></i></div>
             <div class="field-controls" aria-label="Game controls">
               <button class="field-control-button" id="pause-game" type="button" aria-label="Pause game" title="Pause">Pause</button>
               <button class="field-control-button" id="change-theme" type="button" aria-label="Exit to theme selection" title="Exit">Exit</button>
@@ -112,6 +117,6 @@
       </section>
     </main>
 
-    <script src="luftblasen.js?v=20260601-audio1"></script>
+    <script src="luftblasen.js?v=20260601-timer1"></script>
   </body>
 </html>

@@ -5,6 +5,8 @@ const fieldCurrentSum = document.querySelector("#field-current-sum");
 const fieldScore = document.querySelector("#field-score");
 const fieldRound = document.querySelector("#field-round");
 const fieldLives = document.querySelector("#field-lives");
+const fieldTime = document.querySelector("#field-time");
+const fieldTimerBar = document.querySelector("#field-timer-bar");
 const currentSumText = document.querySelector("#current-sum");
 const remainingTotal = document.querySelector("#remaining-total");
 const sumMeter = document.querySelector("#sum-meter");
@@ -49,6 +51,8 @@ let spawnTimer = 0;
 let lastFrame = 0;
 let started = false;
 let audioContext;
+let roundTimeLimit = 12000;
+let roundTimeRemaining = 12000;
 
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.45;
@@ -68,6 +72,7 @@ function startGame() {
   bubbleId = 1;
   spawnTimer = 0;
   target = rollTarget();
+  resetRoundTimer();
   playfield.querySelectorAll(".bubble").forEach((bubble) => bubble.remove());
   for (let index = 0; index < 9; index += 1) {
     spawnBubble();
@@ -80,6 +85,16 @@ function startGame() {
 function rollTarget() {
   const difficulty = Number(difficultyInput.value);
   return randomInt(12 + difficulty * 2 + round, 18 + difficulty * 6 + round * 2);
+}
+
+function rollRoundTimeLimit() {
+  const difficulty = Number(difficultyInput.value);
+  return Math.max(6500, 15500 - difficulty * 1350 - (round - 1) * 160);
+}
+
+function resetRoundTimer() {
+  roundTimeLimit = rollRoundTimeLimit();
+  roundTimeRemaining = roundTimeLimit;
 }
 
 function spawnBubble(forceMultiplier = false) {
@@ -173,6 +188,7 @@ function scoreExactSum() {
     }
   }
   target = rollTarget();
+  resetRoundTimer();
   while (bubbles.length < 10) {
     spawnBubble();
   }
@@ -189,8 +205,10 @@ function loseLife(reason) {
   if (lives <= 0) {
     gameOver = true;
     paused = true;
+    pauseThemeMusic();
     setMessage(`Game over. Final score: ${score.toLocaleString()}.`);
   } else {
+    resetRoundTimer();
     setMessage(`${reason} ${lives} ${lives === 1 ? "life" : "lives"} left.`);
   }
   updateHud();
@@ -294,9 +312,12 @@ function updateHud() {
   fieldRound.textContent = round;
   livesText.textContent = "♥".repeat(Math.max(0, lives));
   fieldLives.textContent = "♥".repeat(Math.max(0, lives));
+  fieldTime.textContent = Math.ceil(roundTimeRemaining / 1000);
   multiplierText.textContent = `${multiplier}x${multiplierTurns > 0 ? ` · ${multiplierTurns}` : ""}`;
   sumMeter.style.width = `${Math.min(100, (sum / target) * 100)}%`;
   sumMeter.style.background = sum > target ? "var(--danger)" : "linear-gradient(90deg, var(--accent), var(--good))";
+  fieldTimerBar.style.transform = `scaleX(${Math.max(0, roundTimeRemaining / roundTimeLimit)})`;
+  fieldTimerBar.style.background = roundTimeRemaining <= 3000 ? "var(--danger)" : "linear-gradient(90deg, var(--good), var(--gold))";
 }
 
 function setMessage(text) {
@@ -311,6 +332,11 @@ function tick(timestamp) {
   lastFrame = timestamp;
 
   if (started && !paused && !gameOver) {
+    roundTimeRemaining -= delta;
+    if (roundTimeRemaining <= 0) {
+      roundTimeRemaining = 0;
+      loseLife("Time up. Selection cleared.");
+    }
     updateBubbles(delta);
     spawnTimer += delta;
     const difficulty = Number(difficultyInput.value);
@@ -320,6 +346,7 @@ function tick(timestamp) {
       spawnTimer = 0;
       spawnBubble();
     }
+    updateHud();
   }
 
   window.requestAnimationFrame(tick);
