@@ -69,21 +69,6 @@
       </section>
 
       <section class="layout">
-        <aside class="side-panel controls-panel" aria-label="Controls">
-          <div class="button-grid">
-            <button class="secondary-button" id="pause-game" type="button">Pause</button>
-            <button class="secondary-button" id="change-theme" type="button">Change Theme</button>
-            <button class="primary-button" id="new-game" type="button">New Game</button>
-          </div>
-          <div class="control-status">
-            <div class="bonus-card" id="bonus-card">
-              <span>Multiplier</span>
-              <strong id="multiplier-text">1x</strong>
-            </div>
-            <button class="secondary-button" id="clear-selection" type="button">Reset Sum</button>
-          </div>
-        </aside>
-
         <section class="play-card">
           <div class="playfield" id="playfield" aria-label="Bubble play field">
             <div class="field-hud" aria-hidden="true">
@@ -107,6 +92,14 @@
                 <span>Lives</span>
                 <strong id="field-lives">♥♥♥♥♥</strong>
               </div>
+            </div>
+            <div class="field-controls" aria-label="Game controls">
+              <button class="field-control-button" id="pause-game" type="button" aria-label="Pause game" title="Pause">Pause</button>
+              <button class="field-control-button" id="change-theme" type="button" aria-label="Exit to theme selection" title="Exit">Exit</button>
+            </div>
+            <div class="field-multiplier" aria-label="Multiplier">
+              <span>Multiplier</span>
+              <strong id="multiplier-text">1x</strong>
             </div>
             <div class="field-message" id="field-message">Pick bubbles that add to the target.</div>
           </div>

@@ -16,8 +16,6 @@ const fieldMessage = document.querySelector("#field-message");
 const difficultyInput = document.querySelector("#difficulty");
 const difficultyName = document.querySelector("#difficulty-name");
 const pauseButton = document.querySelector("#pause-game");
-const newGameButton = document.querySelector("#new-game");
-const clearButton = document.querySelector("#clear-selection");
 const shell = document.querySelector(".game-shell");
 const splashScreen = document.querySelector("#splash-screen");
 const startButton = document.querySelector("#start-game");
@@ -321,15 +319,10 @@ pauseButton.addEventListener("click", () => {
   }
   paused = !paused;
   pauseButton.textContent = paused ? "Resume" : "Pause";
+  pauseButton.setAttribute("aria-label", paused ? "Resume game" : "Pause game");
+  pauseButton.title = paused ? "Resume" : "Pause";
   setMessage(paused ? "Paused." : "Back in motion.");
 });
-
-newGameButton.addEventListener("click", () => {
-  pauseButton.textContent = "Pause";
-  startGame();
-});
-
-clearButton.addEventListener("click", clearSelection);
 
 function updateDifficultyName() {
   const names = ["", "Easy", "Casual", "Medium", "Quick", "Hard"];
@@ -340,6 +333,8 @@ startButton.addEventListener("click", () => {
   splashScreen.classList.add("hidden");
   document.body.classList.remove("show-splash");
   pauseButton.textContent = "Pause";
+  pauseButton.setAttribute("aria-label", "Pause game");
+  pauseButton.title = "Pause";
   startGame();
 });
 
@@ -347,6 +342,8 @@ changeThemeButton.addEventListener("click", () => {
   paused = true;
   started = false;
   pauseButton.textContent = "Pause";
+  pauseButton.setAttribute("aria-label", "Pause game");
+  pauseButton.title = "Pause";
   playfield.querySelectorAll(".bubble").forEach((bubble) => bubble.remove());
   bubbles = [];
   selected = [];
