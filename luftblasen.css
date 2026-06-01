@@ -523,8 +523,10 @@ input {
   z-index: 5;
   height: 5px;
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 999px;
   background: rgba(8, 28, 54, 0.42);
+  box-shadow: 0 8px 20px rgba(5, 25, 48, 0.18);
   pointer-events: none;
 }
 
@@ -535,6 +537,38 @@ input {
   border-radius: inherit;
   background: linear-gradient(90deg, var(--good), var(--gold));
   transform-origin: left center;
+  transition: background 140ms ease, transform 140ms linear;
+}
+
+.field-timer.warning {
+  height: 7px;
+  background: rgba(75, 45, 0, 0.58);
+}
+
+.field-timer.critical {
+  height: 9px;
+  background: rgba(93, 8, 8, 0.7);
+  box-shadow: 0 0 0 2px rgba(233, 64, 64, 0.22), 0 0 24px rgba(233, 64, 64, 0.42);
+  animation: timer-pulse 650ms ease-in-out infinite;
+}
+
+.timer-stat.warning strong {
+  color: #ffe08a;
+}
+
+.timer-stat.critical strong {
+  color: #ff8a7a;
+}
+
+@keyframes timer-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.62;
+  }
 }
 
 .field-controls {

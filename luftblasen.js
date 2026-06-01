@@ -6,7 +6,9 @@ const fieldScore = document.querySelector("#field-score");
 const fieldRound = document.querySelector("#field-round");
 const fieldLives = document.querySelector("#field-lives");
 const fieldTime = document.querySelector("#field-time");
+const timerStat = document.querySelector(".timer-stat");
 const fieldTimerBar = document.querySelector("#field-timer-bar");
+const fieldTimer = document.querySelector(".field-timer");
 const currentSumText = document.querySelector("#current-sum");
 const remainingTotal = document.querySelector("#remaining-total");
 const sumMeter = document.querySelector("#sum-meter");
@@ -360,8 +362,19 @@ function updateHud() {
   multiplierText.textContent = `${multiplier}x${multiplierTurns > 0 ? ` · ${multiplierTurns}` : ""}`;
   sumMeter.style.width = `${Math.min(100, (sum / target) * 100)}%`;
   sumMeter.style.background = sum > target ? "var(--danger)" : "linear-gradient(90deg, var(--accent), var(--good))";
-  fieldTimerBar.style.transform = `scaleX(${Math.max(0, roundTimeRemaining / roundTimeLimit)})`;
-  fieldTimerBar.style.background = roundTimeRemaining <= 3000 ? "var(--danger)" : "linear-gradient(90deg, var(--good), var(--gold))";
+  const timeRatio = Math.max(0, roundTimeRemaining / roundTimeLimit);
+  const isCritical = timeRatio <= 0.18 || roundTimeRemaining <= 2500;
+  const isWarning = !isCritical && (timeRatio <= 0.38 || roundTimeRemaining <= 5000);
+  fieldTimerBar.style.transform = `scaleX(${timeRatio})`;
+  fieldTimerBar.style.background = isCritical
+    ? "linear-gradient(90deg, #ff2f2f, #ff8a7a)"
+    : isWarning
+      ? "linear-gradient(90deg, var(--gold), #ffcf5a)"
+      : "linear-gradient(90deg, var(--good), var(--gold))";
+  fieldTimer?.classList.toggle("warning", isWarning);
+  fieldTimer?.classList.toggle("critical", isCritical);
+  timerStat?.classList.toggle("warning", isWarning);
+  timerStat?.classList.toggle("critical", isCritical);
 }
 
 function setMessage(text) {
