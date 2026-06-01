@@ -147,6 +147,10 @@ function spawnBubble(forceMultiplier = false) {
 
   bubble.style.left = `${position.x}px`;
   bubble.style.top = `${position.y}px`;
+  bubble.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    selectBubble(id);
+  });
   bubble.addEventListener("click", () => selectBubble(id));
   playfield.appendChild(bubble);
 
@@ -249,7 +253,7 @@ function popBubble(bubble, withSound = true) {
   if (withSound) {
     playPopSound();
   }
-  window.setTimeout(() => bubble.element.remove(), 170);
+  window.setTimeout(() => bubble.element.remove(), 90);
 }
 
 function addPopTime(bubble) {
