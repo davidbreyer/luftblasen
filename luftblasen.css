@@ -859,19 +859,22 @@ input {
   text-shadow: 0 2px 2px rgba(0, 0, 0, 0.75);
 }
 
-@media (min-width: 561px) and (max-width: 920px) and (orientation: portrait) {
+@media (min-width: 561px) and (orientation: portrait) {
   body:not(.show-splash) {
+    height: 100vh;
     height: 100dvh;
     overflow: hidden;
   }
 
   .game-shell {
     width: min(100% - 18px, 1480px);
+    height: 100vh;
     height: 100dvh;
     padding: 9px 0;
   }
 
   .play-card {
+    height: calc(100vh - 18px);
     height: calc(100dvh - 18px);
     min-height: 0;
   }
@@ -884,12 +887,14 @@ input {
 
 @media (max-width: 560px) {
   body:not(.show-splash) {
+    height: 100vh;
     height: 100dvh;
     overflow: hidden;
   }
 
   .game-shell {
     width: min(100% - 14px, 1480px);
+    height: 100vh;
     height: 100dvh;
     padding: 7px 0;
   }
@@ -900,6 +905,7 @@ input {
   }
 
   .play-card {
+    height: calc(100vh - 14px);
     height: calc(100dvh - 14px);
     min-height: 0;
   }
