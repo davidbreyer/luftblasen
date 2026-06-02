@@ -103,13 +103,26 @@ function startGame() {
 }
 
 function rollTarget() {
-  const difficulty = Number(difficultyInput.value);
-  return randomInt(12 + difficulty * 2 + round, 18 + difficulty * 6 + round * 2);
+  const pressure = currentPressure();
+  return randomInt(
+    12 + pressure.baseDifficulty * 2 + round,
+    18 + Math.round(pressure.effectiveDifficulty * 6) + round * 2
+  );
 }
 
 function rollRoundTimeLimit() {
-  const difficulty = Number(difficultyInput.value);
-  return Math.max(6500, 15500 - difficulty * 1350 - (round - 1) * 160);
+  const pressure = currentPressure();
+  return Math.max(5600, 15800 - pressure.baseDifficulty * 1150 - pressure.roundPressure * 680);
+}
+
+function currentPressure() {
+  const baseDifficulty = Number(difficultyInput.value);
+  const roundPressure = Math.min(5.5, Math.max(0, round - 1) * 0.32);
+  return {
+    baseDifficulty,
+    roundPressure,
+    effectiveDifficulty: Math.min(7.5, baseDifficulty + roundPressure)
+  };
 }
 
 function resetRoundTimer() {
@@ -145,8 +158,8 @@ function spawnBubble(forceMultiplier = false) {
   const y = randomInt(Math.floor(rect.height * 0.24), Math.max(Math.floor(rect.height * 0.28), rect.height - size - 96));
   const position = findOpenPosition(size, rect, x, y);
   const drift = (Math.random() - 0.5) * 12;
-  const difficulty = Number(difficultyInput.value);
-  const speed = (4 + difficulty * difficulty * 2.15 + round * (0.25 + difficulty * 0.12)) / 1000;
+  const pressure = currentPressure();
+  const speed = (4 + pressure.effectiveDifficulty * pressure.effectiveDifficulty * 1.35 + round * 0.18) / 1000;
 
   bubble.style.left = `${position.x}px`;
   bubble.style.top = `${position.y}px`;
@@ -267,11 +280,12 @@ function addPopTime(bubble) {
 }
 
 function timeRewardForBubble(bubble) {
-  const difficulty = Number(difficultyInput.value);
+  const pressure = currentPressure();
   const normalRewards = [0, 1250, 1050, 850, 700, 550];
   const multiplierRewards = [0, 2800, 2350, 1900, 1550, 1250];
-  const base = bubble.isMultiplier ? multiplierRewards[difficulty] : normalRewards[difficulty];
-  return bubble.isBonus ? Math.round(base * 1.35) : base;
+  const base = bubble.isMultiplier ? multiplierRewards[pressure.baseDifficulty] : normalRewards[pressure.baseDifficulty];
+  const scaled = Math.max(base * 0.58, base - pressure.roundPressure * 80);
+  return bubble.isBonus ? Math.round(scaled * 1.35) : Math.round(scaled);
 }
 
 function formatReward(milliseconds) {
@@ -427,9 +441,9 @@ function tick(timestamp) {
     }
     updateBubbles(delta);
     spawnTimer += delta;
-    const difficulty = Number(difficultyInput.value);
-    const spawnEvery = Math.max(520, 3400 - difficulty * 430 - round * 24);
-    const maxBubbles = 10 + difficulty * 2;
+    const pressure = currentPressure();
+    const spawnEvery = Math.max(620, 3500 - pressure.baseDifficulty * 390 - pressure.roundPressure * 150);
+    const maxBubbles = Math.min(22, 10 + pressure.baseDifficulty * 2 + Math.floor(pressure.roundPressure));
     if (spawnTimer >= spawnEvery && bubbles.length < maxBubbles) {
       spawnTimer = 0;
       spawnBubble();
