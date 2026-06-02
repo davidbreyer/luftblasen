@@ -96,7 +96,7 @@ function startGame() {
   for (let index = 0; index < 9; index += 1) {
     spawnBubble();
   }
-  startThemeMusic();
+  startThemeMusic({ restart: true });
   updateHud();
   setMessage("Pick bubbles that add exactly to the target. Only going over costs a life.");
   announceTarget("Target");
@@ -345,16 +345,19 @@ function playSynthPop() {
   oscillator.stop(now + 0.1);
 }
 
-function startThemeMusic() {
+function startThemeMusic({ restart = false } = {}) {
   if (!musicEnabled()) {
     pauseThemeMusic();
     return;
   }
   const musicPath = themeMusic[shell.dataset.theme] || themeMusic.classic;
-  if (!backgroundMusic.src.endsWith(musicPath)) {
+  const sourceChanged = !backgroundMusic.src.endsWith(musicPath);
+  if (sourceChanged) {
     backgroundMusic.src = musicPath;
   }
-  backgroundMusic.currentTime = 0;
+  if (restart || sourceChanged) {
+    backgroundMusic.currentTime = 0;
+  }
   backgroundMusic.play().catch(() => {});
 }
 
@@ -438,6 +441,8 @@ function tick(timestamp) {
     if (roundTimeRemaining <= 0) {
       roundTimeRemaining = 0;
       loseLife("Time up. Selection cleared.");
+      window.requestAnimationFrame(tick);
+      return;
     }
     updateBubbles(delta);
     spawnTimer += delta;
