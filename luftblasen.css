@@ -11,9 +11,7 @@
   --gold: #f2a51a;
   --bubble: #d7f1ff;
   --play-bg: url("assets/luftblasen/images/backgrounds/classic-theme-background.png");
-  --bubble-img: url("assets/luftblasen/images/bubble.png");
-  --bonus-img: url("assets/luftblasen/images/bubblebonus.png");
-  --multiplier-img: url("assets/luftblasen/images/bubblemultiplier.png");
+  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-classic-sprite.png");
   --shadow: 0 20px 55px rgba(19, 81, 135, 0.16);
   --radius: 8px;
 }
@@ -869,7 +867,7 @@ body:not(.show-splash) .playfield {
   height: var(--size);
   border: 0;
   border-radius: 50%;
-  background: var(--bubble-img) center / contain no-repeat;
+  background: var(--bubble-sprite) 0% center / 300% 100% no-repeat;
   box-shadow: none;
   color: white;
   cursor: pointer;
@@ -893,34 +891,11 @@ body:not(.show-splash) .playfield {
 }
 
 .bubble.multiplier {
-  background-image: var(--multiplier-img);
+  background-position: 100% center;
 }
 
 .bubble.bonus {
-  background-image: var(--bonus-img);
-}
-
-.bubble.bonus::before {
-  content: "+T";
-  position: absolute;
-  top: -3px;
-  right: -3px;
-  display: grid;
-  width: calc(var(--size) * 0.42);
-  height: calc(var(--size) * 0.32);
-  min-width: 26px;
-  min-height: 20px;
-  place-items: center;
-  border: 2px solid white;
-  border-radius: 999px;
-  background: var(--gold);
-  color: white;
-  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
-  font-size: calc(var(--size) * 0.18);
-  font-weight: 950;
-  line-height: 1;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.28);
+  background-position: 50% center;
 }
 
 .bubble.popped {
@@ -943,9 +918,6 @@ body:not(.show-splash) .playfield {
   --bubble: #c9f7dc;
   --gold: #20b66b;
   --play-bg: url("assets/luftblasen/images/backgrounds/shamrock-theme-background.png");
-  --bubble-img: url("assets/luftblasen/images/stpatrick/shamrock.png");
-  --bonus-img: url("assets/luftblasen/images/stpatrick/shamrockbonus.png");
-  --multiplier-img: url("assets/luftblasen/images/stpatrick/shamrockmultiplier.png");
 }
 
 [data-theme="classical"] {
@@ -954,9 +926,6 @@ body:not(.show-splash) .playfield {
   --bubble: #eadbff;
   --gold: #d49a2a;
   --play-bg: url("assets/luftblasen/images/backgrounds/classical-music-background.png");
-  --bubble-img: url("assets/luftblasen/images/classical/note.png");
-  --bonus-img: url("assets/luftblasen/images/classical/notebonus.png");
-  --multiplier-img: url("assets/luftblasen/images/classical/notemultiplier.png");
 }
 
 [data-theme="boardgame"] {
@@ -969,43 +938,6 @@ body:not(.show-splash) .playfield {
 
 [data-theme="boardgame"] .playfield {
   background-size: cover;
-}
-
-[data-theme="boardgame"] .bubble {
-  border-radius: 11px;
-  background:
-    radial-gradient(circle at 14% 14%, rgba(255, 250, 166, 0.9) 0 7%, transparent 8%),
-    linear-gradient(145deg, #ffc845 0%, #d27b08 34%, #9c5200 70%, #ffca48 100%);
-  box-shadow:
-    inset 6px 6px 14px rgba(255, 226, 86, 0.72),
-    inset -8px -8px 14px rgba(91, 42, 0, 0.46),
-    0 10px 18px rgba(83, 45, 8, 0.25);
-  color: #1e1305;
-  font-family: Georgia, "Times New Roman", serif;
-  text-shadow: none;
-}
-
-[data-theme="boardgame"] .bubble::after {
-  content: "1";
-  position: absolute;
-  right: 18%;
-  bottom: 13%;
-  font-size: calc(var(--size) * 0.14);
-  font-weight: 900;
-}
-
-[data-theme="boardgame"] .bubble.bonus {
-  background:
-    radial-gradient(circle at 14% 14%, rgba(255, 255, 200, 0.92) 0 7%, transparent 8%),
-    linear-gradient(145deg, #ffe071 0%, #e79b12 36%, #a75e00 72%, #ffd665 100%);
-}
-
-[data-theme="boardgame"] .bubble.multiplier {
-  background:
-    radial-gradient(circle at 14% 14%, rgba(255, 255, 220, 0.92) 0 7%, transparent 8%),
-    linear-gradient(145deg, #ffd45f 0%, #bf6900 34%, #713500 74%, #ffbe35 100%);
-  color: #fff8df;
-  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.75);
 }
 
 @media (max-width: 560px) {
