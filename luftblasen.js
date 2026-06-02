@@ -28,6 +28,9 @@ const pauseButton = document.querySelector("#pause-game");
 const shell = document.querySelector(".game-shell");
 const splashScreen = document.querySelector("#splash-screen");
 const startButton = document.querySelector("#start-game");
+const howButton = document.querySelector("#how-to-play");
+const howPanel = document.querySelector("#how-panel");
+const closeHowButton = document.querySelector("#close-how");
 const changeThemeButton = document.querySelector("#change-theme");
 const endScreen = document.querySelector("#end-screen");
 const endScore = document.querySelector("#end-score");
@@ -564,6 +567,29 @@ startButton?.addEventListener("click", () => {
   document.body.classList.remove("show-splash");
   resetPauseButton();
   startGame();
+});
+
+howButton?.addEventListener("click", () => {
+  howPanel?.classList.remove("hidden");
+});
+
+closeHowButton?.addEventListener("click", () => {
+  howPanel?.classList.add("hidden");
+  howButton?.focus();
+});
+
+howPanel?.addEventListener("click", (event) => {
+  if (event.target === howPanel) {
+    howPanel.classList.add("hidden");
+    howButton?.focus();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && howPanel && !howPanel.classList.contains("hidden")) {
+    howPanel.classList.add("hidden");
+    howButton?.focus();
+  }
 });
 
 changeThemeButton?.addEventListener("click", () => {

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no">
     <title>Luftblasen</title>
-    <link rel="stylesheet" href="luftblasen.css?v=20260601-1956">
+    <link rel="stylesheet" href="luftblasen.css?v=20260601-2003">
   </head>
   <body class="show-splash">
     <main class="game-shell" data-theme="classic">
@@ -51,8 +51,39 @@
             <span>Pops</span>
           </label>
         </div>
-        <button class="start-button" id="start-game" type="button">Start Game</button>
-        <footer class="splash-version">v<span data-version>20260601-1956</span></footer>
+        <div class="splash-actions">
+          <button class="start-button" id="start-game" type="button">Start Game</button>
+          <button class="how-button" id="how-to-play" type="button">How to Play</button>
+        </div>
+        <footer class="splash-version">v<span data-version>20260601-2003</span></footer>
+        <div class="how-panel hidden" id="how-panel" role="dialog" aria-modal="true" aria-labelledby="how-title">
+          <div class="how-card">
+            <button class="how-close" id="close-how" type="button" aria-label="Close how to play">&times;</button>
+            <h2 id="how-title">How to Play</h2>
+            <div class="how-steps">
+              <section>
+                <b>Hit the target exactly.</b>
+                <p>Pop numbered bubbles until Current equals Target. Going over costs a life.</p>
+              </section>
+              <section>
+                <b>Watch the timer.</b>
+                <p>The timer bar turns gold, then red, when time is running out. If it empties, you lose a life.</p>
+              </section>
+              <section>
+                <b>Every pop adds time.</b>
+                <p>Regular bubbles add a little time. Bonus bubbles add more. Harder difficulty gives less time back.</p>
+              </section>
+              <section>
+                <b>Multipliers are power-ups.</b>
+                <p>Multiplier bubbles do not add to your sum. They boost the next three exact matches and add the most timer time.</p>
+              </section>
+              <section>
+                <b>Keep five lives alive.</b>
+                <p>Score as many rounds as you can before the hearts run out.</p>
+              </section>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="hud" aria-label="Game stats">
@@ -152,6 +183,6 @@
       </section>
     </main>
 
-    <script src="luftblasen.js?v=20260601-1956"></script>
+    <script src="luftblasen.js?v=20260601-2003"></script>
   </body>
 </html>

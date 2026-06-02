@@ -176,6 +176,13 @@ body:not(.show-splash) .game-shell {
   accent-color: var(--accent);
 }
 
+.splash-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
 .splash-theme {
   display: grid;
   place-items: center;
@@ -213,6 +220,99 @@ body:not(.show-splash) .game-shell {
   font-size: 1rem;
   font-weight: 950;
   box-shadow: 0 14px 30px rgba(0, 93, 192, 0.22);
+}
+
+.how-button {
+  min-width: 150px;
+  min-height: 50px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--accent-strong);
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 950;
+  box-shadow: 0 14px 30px rgba(19, 81, 135, 0.12);
+}
+
+.how-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: rgba(6, 36, 70, 0.42);
+  backdrop-filter: blur(6px);
+}
+
+.how-panel.hidden {
+  display: none;
+}
+
+.how-card {
+  position: relative;
+  width: min(720px, 100%);
+  max-height: min(780px, 92dvh);
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: var(--radius);
+  padding: 26px;
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--text);
+  box-shadow: 0 28px 70px rgba(6, 36, 70, 0.32);
+}
+
+.how-card h2 {
+  margin: 0 46px 20px 0;
+  color: var(--accent-strong);
+  font-size: clamp(2rem, 6vw, 3.3rem);
+  line-height: 0.95;
+}
+
+.how-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: white;
+  color: var(--accent-strong);
+  cursor: pointer;
+  font-size: 1.8rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.how-steps {
+  display: grid;
+  gap: 10px;
+}
+
+.how-steps section {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  background: #f7fcff;
+}
+
+.how-steps b {
+  display: block;
+  color: var(--accent-strong);
+  font-size: clamp(1.15rem, 3vw, 1.45rem);
+  line-height: 1.1;
+}
+
+.how-steps p {
+  margin: 6px 0 0;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 750;
+  line-height: 1.35;
 }
 
 .splash-version {
