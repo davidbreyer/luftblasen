@@ -867,7 +867,7 @@ body:not(.show-splash) .playfield {
   height: var(--size);
   border: 0;
   border-radius: 50%;
-  background: var(--bubble-sprite) 0% center / 300% 100% no-repeat;
+  background: var(--bubble-sprite) 0 center / calc(var(--size) * 3) var(--size) no-repeat;
   box-shadow: none;
   color: white;
   cursor: pointer;
@@ -891,11 +891,11 @@ body:not(.show-splash) .playfield {
 }
 
 .bubble.multiplier {
-  background-position: 100% center;
+  background-position: calc(var(--size) * -2) center;
 }
 
 .bubble.bonus {
-  background-position: 50% center;
+  background-position: calc(var(--size) * -1) center;
 }
 
 .bubble.popped {
