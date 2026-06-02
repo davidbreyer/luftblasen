@@ -13,17 +13,19 @@ if (-not $Release) {
 }
 
 $utf8NoBom = New-Object System.Text.UTF8Encoding $false
-$htmlFiles = @("index.html", "luftblasen.html")
+$versionedFiles = @("index.html", "luftblasen.html", "luftblasen.css")
 
-foreach ($fileName in $htmlFiles) {
+foreach ($fileName in $versionedFiles) {
   $path = Join-Path $repoRoot $fileName
   $content = [System.IO.File]::ReadAllText($path)
   $content = [regex]::Replace($content, '\?v=[^"''\s>]+', "?v=$Release")
-  $content = [regex]::Replace(
-    $content,
-    '(<span data-version>)[^<]*(</span>)',
-    "`${1}$Release`${2}"
-  )
+  if ($fileName.EndsWith(".html")) {
+    $content = [regex]::Replace(
+      $content,
+      '(<span data-version>)[^<]*(</span>)',
+      "`${1}$Release`${2}"
+    )
+  }
   [System.IO.File]::WriteAllText($path, $content, $utf8NoBom)
 }
 
