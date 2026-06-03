@@ -13,7 +13,7 @@ if (-not $Release) {
 }
 
 $utf8NoBom = New-Object System.Text.UTF8Encoding $false
-$versionedFiles = @("index.html", "luftblasen.html", "luftblasen.css")
+$versionedFiles = @("index.html", "luftblasen.html", "luftblasen.css", "luftblasen.js")
 
 foreach ($fileName in $versionedFiles) {
   $path = Join-Path $repoRoot $fileName
