@@ -42,11 +42,11 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/classic-theme.mp3?v=20260602-2234",
-  classical: "assets/luftblasen/Music/Brandenburg_Concerto_No4.mp3?v=20260602-2234",
-  bavarian: "assets/luftblasen/Music/PT_16695.mp3?v=20260602-2234",
-  shamrock: "assets/luftblasen/Music/PT_7927.mp3?v=20260602-2234",
-  boardgame: "assets/luftblasen/Music/cello-logic.mp3?v=20260602-2234"
+  classic: "assets/luftblasen/Music/classic-theme.mp3?v=20260602-2252",
+  classical: "assets/luftblasen/Music/Brandenburg_Concerto_No4.mp3?v=20260602-2252",
+  bavarian: "assets/luftblasen/Music/PT_16695.mp3?v=20260602-2252",
+  shamrock: "assets/luftblasen/Music/PT_7927.mp3?v=20260602-2252",
+  boardgame: "assets/luftblasen/Music/cello-logic.mp3?v=20260602-2252"
 };
 
 const bubbleColors = ["#9ee2ff", "#b9efc4", "#d8c3ff", "#ffe08a", "#a9d8ff"];
@@ -246,6 +246,7 @@ function loseLife(reason) {
     gameOver = true;
     paused = true;
     pauseThemeMusic();
+    playGameOverSound();
     setMessage(`Game over. Final score: ${score.toLocaleString()}.`);
     showEndScreen();
   } else {
@@ -343,6 +344,51 @@ function playSynthPop() {
   oscillator.connect(gain).connect(context.destination);
   oscillator.start(now);
   oscillator.stop(now + 0.1);
+}
+
+function playGameOverSound() {
+  if (!popsEnabled()) {
+    return;
+  }
+  const context = ensureAudioContext();
+  if (!context) {
+    return;
+  }
+  const now = context.currentTime;
+  const master = context.createGain();
+  master.gain.setValueAtTime(0.16, now);
+  master.gain.exponentialRampToValueAtTime(0.001, now + 0.72);
+  master.connect(context.destination);
+
+  [
+    { frequency: 392, delay: 0, duration: 0.18 },
+    { frequency: 294, delay: 0.14, duration: 0.22 },
+    { frequency: 196, delay: 0.32, duration: 0.34 }
+  ].forEach(({ frequency, delay, duration }) => {
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    const start = now + delay;
+    oscillator.type = "triangle";
+    oscillator.frequency.setValueAtTime(frequency, start);
+    oscillator.frequency.exponentialRampToValueAtTime(Math.max(60, frequency * 0.7), start + duration);
+    gain.gain.setValueAtTime(0.001, start);
+    gain.gain.exponentialRampToValueAtTime(0.9, start + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+    oscillator.connect(gain).connect(master);
+    oscillator.start(start);
+    oscillator.stop(start + duration + 0.04);
+  });
+
+  const hit = context.createOscillator();
+  const hitGain = context.createGain();
+  hit.type = "sine";
+  hit.frequency.setValueAtTime(72, now + 0.48);
+  hitGain.gain.setValueAtTime(0.001, now + 0.48);
+  hitGain.gain.exponentialRampToValueAtTime(0.8, now + 0.5);
+  hitGain.gain.exponentialRampToValueAtTime(0.001, now + 0.72);
+  hit.connect(hitGain).connect(master);
+  hit.start(now + 0.48);
+  hit.stop(now + 0.75);
 }
 
 function startThemeMusic({ restart = false } = {}) {
