@@ -11,7 +11,7 @@
   --gold: #f2a51a;
   --bubble: #d7f1ff;
   --play-bg: url("assets/luftblasen/images/backgrounds/classic-theme-background.webp");
-  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-classic-sprite.png?v=20260602-2324");
+  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-classic-sprite.png?v=20260603-0642");
   --shadow: 0 20px 55px rgba(19, 81, 135, 0.16);
   --radius: 8px;
 }
@@ -210,23 +210,23 @@ body:not(.show-splash) .game-shell {
 }
 
 .splash-theme[data-theme="classic"] .theme-sprite {
-  background-image: url("assets/luftblasen/images/sprites/bubble-classic-sprite.png?v=20260602-2324");
+  background-image: url("assets/luftblasen/images/sprites/bubble-classic-sprite.png?v=20260603-0642");
 }
 
 .splash-theme[data-theme="bavarian"] .theme-sprite {
-  background-image: url("assets/luftblasen/images/sprites/bubble-bavarian-sprite.png?v=20260602-2324");
+  background-image: url("assets/luftblasen/images/sprites/bubble-bavarian-sprite.png?v=20260603-0642");
 }
 
 .splash-theme[data-theme="shamrock"] .theme-sprite {
-  background-image: url("assets/luftblasen/images/sprites/bubble-shamrock-sprite.png?v=20260602-2324");
+  background-image: url("assets/luftblasen/images/sprites/bubble-shamrock-sprite.png?v=20260603-0642");
 }
 
 .splash-theme[data-theme="classical"] .theme-sprite {
-  background-image: url("assets/luftblasen/images/sprites/bubble-classical-sprite.png?v=20260602-2324");
+  background-image: url("assets/luftblasen/images/sprites/bubble-classical-sprite.png?v=20260603-0642");
 }
 
 .splash-theme[data-theme="boardgame"] .theme-sprite {
-  background-image: url("assets/luftblasen/images/sprites/bubble-boardgame-sprite.png?v=20260602-2324");
+  background-image: url("assets/luftblasen/images/sprites/bubble-boardgame-sprite.png?v=20260603-0642");
 }
 
 .splash-theme.active {
@@ -966,7 +966,7 @@ body:not(.show-splash) .playfield {
   --bubble: #ffe0a4;
   --gold: #f0a000;
   --play-bg: url("assets/luftblasen/images/backgrounds/bavarian-theme-background.webp");
-  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-bavarian-sprite.png?v=20260602-2324");
+  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-bavarian-sprite.png?v=20260603-0642");
 }
 
 [data-theme="shamrock"] {
@@ -975,7 +975,7 @@ body:not(.show-splash) .playfield {
   --bubble: #c9f7dc;
   --gold: #20b66b;
   --play-bg: url("assets/luftblasen/images/backgrounds/shamrock-theme-background.webp");
-  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-shamrock-sprite.png?v=20260602-2324");
+  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-shamrock-sprite.png?v=20260603-0642");
 }
 
 [data-theme="classical"] {
@@ -984,7 +984,7 @@ body:not(.show-splash) .playfield {
   --bubble: #eadbff;
   --gold: #d49a2a;
   --play-bg: url("assets/luftblasen/images/backgrounds/classical-music-background.webp");
-  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-classical-sprite.png?v=20260602-2324");
+  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-classical-sprite.png?v=20260603-0642");
 }
 
 [data-theme="boardgame"] {
@@ -993,7 +993,7 @@ body:not(.show-splash) .playfield {
   --bubble: #df8a18;
   --gold: #c57500;
   --play-bg: url("assets/luftblasen/images/backgrounds/board-game-theme-background.webp");
-  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-boardgame-sprite.png?v=20260602-2324");
+  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-boardgame-sprite.png?v=20260603-0642");
 }
 
 [data-theme="boardgame"] .playfield {
