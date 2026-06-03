@@ -42,13 +42,14 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260603-0652",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260603-0652",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260603-0652",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260603-0652",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260603-0652"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260603-1638",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260603-1638",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260603-1638",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260603-1638",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260603-1638"
 };
 
+const playableThemes = Object.keys(themeMusic);
 const bubbleColors = ["#9ee2ff", "#b9efc4", "#d8c3ff", "#ffe08a", "#a9d8ff"];
 
 let bubbles = [];
@@ -70,12 +71,14 @@ let roundTimeLimit = 12000;
 let roundTimeRemaining = 12000;
 let activePlayTime = 0;
 let announcementTimer;
+let selectedThemeChoice = "classic";
 
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.45;
 popSound.volume = 0.6;
 
 function startGame() {
+  applySelectedTheme();
   bubbles = [];
   selected = [];
   score = 0;
@@ -577,6 +580,14 @@ function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function applySelectedTheme() {
+  if (selectedThemeChoice === "random") {
+    shell.dataset.theme = playableThemes[randomInt(0, playableThemes.length - 1)];
+    return;
+  }
+  shell.dataset.theme = selectedThemeChoice;
+}
+
 function resetPauseButton() {
   if (!pauseButton) {
     return;
@@ -590,7 +601,10 @@ document.querySelectorAll(".splash-theme").forEach((button) => {
   button.addEventListener("click", () => {
     document.querySelectorAll(".splash-theme").forEach((theme) => theme.classList.remove("active"));
     button.classList.add("active");
-    shell.dataset.theme = button.dataset.theme;
+    selectedThemeChoice = button.dataset.theme;
+    if (selectedThemeChoice !== "random") {
+      shell.dataset.theme = selectedThemeChoice;
+    }
   });
 });
 
