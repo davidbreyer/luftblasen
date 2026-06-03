@@ -42,11 +42,11 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/classic-theme.mp3?v=20260602-2252",
-  classical: "assets/luftblasen/Music/Brandenburg_Concerto_No4.mp3?v=20260602-2252",
-  bavarian: "assets/luftblasen/Music/PT_16695.mp3?v=20260602-2252",
-  shamrock: "assets/luftblasen/Music/PT_7927.mp3?v=20260602-2252",
-  boardgame: "assets/luftblasen/Music/cello-logic.mp3?v=20260602-2252"
+  classic: "assets/luftblasen/Music/classic-theme.mp3?v=20260602-2324",
+  classical: "assets/luftblasen/Music/Brandenburg_Concerto_No4.mp3?v=20260602-2324",
+  bavarian: "assets/luftblasen/Music/PT_16695.mp3?v=20260602-2324",
+  shamrock: "assets/luftblasen/Music/PT_7927.mp3?v=20260602-2324",
+  boardgame: "assets/luftblasen/Music/cello-logic.mp3?v=20260602-2324"
 };
 
 const bubbleColors = ["#9ee2ff", "#b9efc4", "#d8c3ff", "#ffe08a", "#a9d8ff"];
