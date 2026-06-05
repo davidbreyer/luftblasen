@@ -42,11 +42,11 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260604-2340",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260604-2340",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260604-2340",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260604-2340",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260604-2340"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260604-2358",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260604-2358",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260604-2358",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260604-2358",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260604-2358"
 };
 
 const playableThemes = Object.keys(themeMusic);
@@ -589,10 +589,15 @@ function randomInt(min, max) {
 
 function applySelectedTheme() {
   if (selectedThemeChoice === "random") {
-    shell.dataset.theme = playableThemes[randomInt(0, playableThemes.length - 1)];
+    setActiveTheme(playableThemes[randomInt(0, playableThemes.length - 1)]);
     return;
   }
-  shell.dataset.theme = selectedThemeChoice;
+  setActiveTheme(selectedThemeChoice);
+}
+
+function setActiveTheme(theme) {
+  shell.dataset.theme = theme;
+  document.body.dataset.theme = theme;
 }
 
 function resetPauseButton() {
@@ -610,7 +615,7 @@ document.querySelectorAll(".splash-theme").forEach((button) => {
     button.classList.add("active");
     selectedThemeChoice = button.dataset.theme;
     if (selectedThemeChoice !== "random") {
-      shell.dataset.theme = selectedThemeChoice;
+      setActiveTheme(selectedThemeChoice);
     }
   });
 });
