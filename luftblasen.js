@@ -42,11 +42,11 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260603-2314",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260603-2314",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260603-2314",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260603-2314",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260603-2314"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260604-2340",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260604-2340",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260604-2340",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260604-2340",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260604-2340"
 };
 
 const playableThemes = Object.keys(themeMusic);
@@ -219,7 +219,8 @@ function selectBubble(id) {
 
 function scoreExactSum() {
   const bonusCount = selected.filter((bubble) => bubble.isBonus).length;
-  const points = target * 10 * multiplier + selected.length * 15 + bonusCount * 50;
+  const timeBonus = scoreTimeBonus();
+  const points = target * 10 * multiplier + selected.length * 15 + bonusCount * 50 + timeBonus;
   score += points;
   round += 1;
   selected = [];
@@ -237,9 +238,15 @@ function scoreExactSum() {
   if (round % 4 === 0) {
     spawnBubble(true);
   }
-  setMessage(`Exact! +${points.toLocaleString()} points. New target ready.`);
+  setMessage(`Exact! +${points.toLocaleString()} points, including ${timeBonus.toLocaleString()} time bonus.`);
   announceBoard("Next Target", target, "success");
   updateHud();
+}
+
+function scoreTimeBonus() {
+  const maxRatio = 1.35;
+  const timeRatio = Math.min(maxRatio, Math.max(0, roundTimeRemaining / roundTimeLimit));
+  return Math.round(target * 5 * timeRatio * multiplier);
 }
 
 function loseLife(reason) {

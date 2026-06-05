@@ -25,6 +25,14 @@ Each round gives you a target number. Pop numbered bubbles until your current su
 
 The end screen shows your final score, time played, and round reached, with options to play again or return to theme selection.
 
+## Scoring
+
+Exact matches score from the target, the number of bubbles used, any bonus bubbles, the active multiplier, and how much time is left on the timer.
+
+- More time left means a larger time bonus.
+- Multiplier bubbles also multiply the time bonus while they are active.
+- Bonus bubbles add an extra fixed score bonus on top of their larger number value.
+
 ## Timer
 
 The timer starts fresh each round. Popping bubbles adds a little time back, so quick decisions keep the run alive.
