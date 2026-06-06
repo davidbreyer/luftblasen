@@ -46,13 +46,13 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260606-1605",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260606-1605",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260606-1605",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260606-1605",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260606-1605",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260606-1605",
-  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260606-1605"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260606-1623",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260606-1623",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260606-1623",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260606-1623",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260606-1623",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260606-1623",
+  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260606-1623"
 };
 
 const playableThemes = Object.keys(themeMusic);
@@ -525,6 +525,7 @@ function updateHud() {
   sumMeter.style.width = `${Math.min(100, (sum / target) * 100)}%`;
   sumMeter.style.background = sum > target ? "var(--danger)" : "linear-gradient(90deg, var(--accent), var(--good))";
   const timeRatio = Math.max(0, roundTimeRemaining / roundTimeLimit);
+  const isTimeLow = started && !paused && !gameOver && roundTimeRemaining > 0 && roundTimeRemaining <= 5000;
   const isCritical = timeRatio <= 0.18 || roundTimeRemaining <= 2500;
   const isWarning = !isCritical && (timeRatio <= 0.38 || roundTimeRemaining <= 5000);
   fieldTimerBar.style.transform = `scaleX(${timeRatio})`;
@@ -537,6 +538,7 @@ function updateHud() {
   fieldTimer?.classList.toggle("critical", isCritical);
   timerStat?.classList.toggle("warning", isWarning);
   timerStat?.classList.toggle("critical", isCritical);
+  playfield?.classList.toggle("time-low", isTimeLow);
 }
 
 function setMessage(text) {
