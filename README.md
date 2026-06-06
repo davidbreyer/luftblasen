@@ -61,6 +61,7 @@ The game includes multiple themes with their own visuals and music:
 - Shamrock
 - Classical
 - Board Game
+- 1776
 
 Music and pop sounds can be toggled separately from the title screen, so the game can be played with pops only, music only, both, or neither.
 
