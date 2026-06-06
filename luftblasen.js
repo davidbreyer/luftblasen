@@ -46,17 +46,18 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260606-1516",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260606-1516",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260606-1516",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260606-1516",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260606-1516",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260606-1516",
-  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260606-1516"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260606-1543",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260606-1543",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260606-1543",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260606-1543",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260606-1543",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260606-1543",
+  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260606-1543"
 };
 
 const playableThemes = Object.keys(themeMusic);
 const bubbleColors = ["#9ee2ff", "#b9efc4", "#d8c3ff", "#ffe08a", "#a9d8ff"];
+const reduceMotionQuery = window.matchMedia?.("(prefers-reduced-motion: reduce)");
 const gameOverTips = [
   "Multipliers add score and time. Use them strategically.",
   "Bonus bubbles add bigger numbers and give extra time back.",
@@ -177,7 +178,10 @@ function spawnBubble(forceMultiplier = false) {
   const x = randomInt(8, Math.max(10, rect.width - size - 8));
   const y = randomInt(Math.floor(rect.height * 0.24), Math.max(Math.floor(rect.height * 0.28), rect.height - size - 96));
   const position = findOpenPosition(size, rect, x, y);
-  const drift = (Math.random() - 0.5) * 12;
+  const allowsMotion = !reduceMotionQuery?.matches;
+  const swayAmplitude = allowsMotion ? randomInt(3, 7) : 0;
+  const swayDuration = randomInt(5200, 7200);
+  const swayPhase = Math.random() * Math.PI * 2;
   const pressure = currentPressure();
   const speed = (4 + pressure.effectiveDifficulty * pressure.effectiveDifficulty * 1.35 + round * 0.18) / 1000;
 
@@ -190,7 +194,23 @@ function spawnBubble(forceMultiplier = false) {
   bubble.addEventListener("click", () => selectBubble(id));
   playfield.appendChild(bubble);
 
-  bubbles.push({ id, element: bubble, value, isMultiplier, isBonus, x: position.x, y: position.y, drift, speed, size, selected: false });
+  bubbles.push({
+    id,
+    element: bubble,
+    value,
+    isMultiplier,
+    isBonus,
+    x: position.x,
+    baseX: position.x,
+    y: position.y,
+    swayAmplitude,
+    swayDuration,
+    swayPhase,
+    swayTime: 0,
+    speed,
+    size,
+    selected: false
+  });
 }
 
 function boardScale(rect = playfield.getBoundingClientRect()) {
@@ -575,8 +595,9 @@ function updateBubbles(delta) {
       return;
     }
     bubble.y -= bubble.speed * delta;
-    bubble.x += Math.sin((bubble.y + bubble.id * 17) / 60) * bubble.drift * (delta / 1000);
-    bubble.x = Math.max(4, Math.min(rect.width - bubble.size - 4, bubble.x));
+    bubble.swayTime += delta;
+    const sway = Math.sin(bubble.swayPhase + (bubble.swayTime / bubble.swayDuration) * Math.PI * 2) * bubble.swayAmplitude;
+    bubble.x = Math.max(4, Math.min(rect.width - bubble.size - 4, bubble.baseX + sway));
     bubble.element.style.left = `${bubble.x}px`;
     bubble.element.style.top = `${bubble.y}px`;
 
