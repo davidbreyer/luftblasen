@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no">
     <title>Luftblasen</title>
-    <link rel="stylesheet" href="luftblasen.css?v=20260605-2257">
+    <link rel="stylesheet" href="luftblasen.css?v=20260605-2312">
   </head>
   <body class="show-splash" data-theme="classic">
     <main class="game-shell" data-theme="classic">
       <section class="splash-screen" id="splash-screen" aria-labelledby="splash-title">
         <div class="splash-brand">
           <h1 id="splash-title">Luftblasen</h1>
-          <img class="splash-logo" src="assets/luftblasen/images/luftblasen-logo.webp?v=20260605-2257" alt="Luftblasen">
+          <img class="splash-logo" src="assets/luftblasen/images/luftblasen-logo.webp?v=20260605-2312" alt="Luftblasen">
           <p>A modern remake of the original math puzzler.</p>
         </div>
         <div class="splash-theme-grid" id="splash-theme-list" aria-label="Choose theme">
@@ -64,7 +64,7 @@
           <button class="start-button" id="start-game" type="button">Start Game</button>
           <button class="how-button" id="how-to-play" type="button">How to Play</button>
         </div>
-        <footer class="splash-version">v<span data-version>20260605-2257</span></footer>
+        <footer class="splash-version">v<span data-version>20260605-2312</span></footer>
         <div class="how-panel hidden" id="how-panel" role="dialog" aria-modal="true" aria-labelledby="how-title">
           <div class="how-card">
             <button class="how-close" id="close-how" type="button" aria-label="Close how to play">&times;</button>
@@ -124,17 +124,13 @@
         <section class="play-card">
           <div class="playfield" id="playfield" aria-label="Bubble play field">
             <div class="field-hud" aria-hidden="true">
-              <div class="field-stat target-stat">
-                <span>Target</span>
-                <strong id="field-target-total">18</strong>
-              </div>
-              <div class="field-stat">
-                <span>Current</span>
-                <strong id="field-current-sum">0</strong>
-              </div>
               <div class="field-stat">
                 <span>Score</span>
                 <strong id="field-score">0</strong>
+              </div>
+              <div class="field-stat target-stat">
+                <span>Target</span>
+                <strong id="field-target-total">18</strong>
               </div>
               <div class="field-stat small">
                 <span>Round</span>
@@ -143,6 +139,10 @@
               <div class="field-stat lives-stat">
                 <span>Lives</span>
                 <strong id="field-lives">♥♥♥♥♥</strong>
+              </div>
+              <div class="field-stat current-stat">
+                <span>Current</span>
+                <strong id="field-current-sum">0</strong>
               </div>
               <div class="field-stat small timer-stat">
                 <span>Time</span>
@@ -192,6 +192,6 @@
       </section>
     </main>
 
-    <script src="luftblasen.js?v=20260605-2257"></script>
+    <script src="luftblasen.js?v=20260605-2312"></script>
   </body>
 </html>
