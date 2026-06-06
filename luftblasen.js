@@ -46,13 +46,13 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260606-1356",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260606-1356",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260606-1356",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260606-1356",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260606-1356",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260606-1356",
-  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260606-1356"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260606-1423",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260606-1423",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260606-1423",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260606-1423",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260606-1423",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260606-1423",
+  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260606-1423"
 };
 
 const playableThemes = Object.keys(themeMusic);
@@ -112,7 +112,8 @@ function startGame() {
   hideEndScreen();
   hidePauseScreen();
   playfield.querySelectorAll(".bubble").forEach((bubble) => bubble.remove());
-  for (let index = 0; index < 9; index += 1) {
+  const openingBubbleCount = getOpeningBubbleCount();
+  for (let index = 0; index < openingBubbleCount; index += 1) {
     spawnBubble();
   }
   startThemeMusic({ restart: true });
@@ -155,7 +156,7 @@ function spawnBubble(forceMultiplier = false) {
   }
 
   const rect = playfield.getBoundingClientRect();
-  const size = randomInt(56, 88);
+  const size = rollBubbleSize(rect);
   const roll = Math.random();
   const isMultiplier = forceMultiplier || roll < 0.1;
   const isBonus = !isMultiplier && roll >= 0.1 && roll < 0.24;
@@ -190,6 +191,20 @@ function spawnBubble(forceMultiplier = false) {
   playfield.appendChild(bubble);
 
   bubbles.push({ id, element: bubble, value, isMultiplier, isBonus, x: position.x, y: position.y, drift, speed, size, selected: false });
+}
+
+function boardScale(rect = playfield.getBoundingClientRect()) {
+  return Math.max(0, Math.min(1, (rect.width - 430) / 290));
+}
+
+function rollBubbleSize(rect) {
+  const scale = boardScale(rect);
+  return randomInt(Math.round(56 + scale * 18), Math.round(88 + scale * 24));
+}
+
+function getOpeningBubbleCount() {
+  const scale = boardScale();
+  return 9 + Math.round(scale * 3);
 }
 
 function selectBubble(id) {
@@ -520,7 +535,7 @@ function tick(timestamp) {
     spawnTimer += delta;
     const pressure = currentPressure();
     const spawnEvery = Math.max(620, 3500 - pressure.baseDifficulty * 390 - pressure.roundPressure * 150);
-    const maxBubbles = Math.min(22, 10 + pressure.baseDifficulty * 2 + Math.floor(pressure.roundPressure));
+    const maxBubbles = Math.min(28, 10 + pressure.baseDifficulty * 2 + Math.floor(pressure.roundPressure) + Math.round(boardScale() * 5));
     if (spawnTimer >= spawnEvery && bubbles.length < maxBubbles) {
       spawnTimer = 0;
       spawnBubble();
