@@ -46,13 +46,13 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260606-1543",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260606-1543",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260606-1543",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260606-1543",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260606-1543",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260606-1543",
-  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260606-1543"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260606-1605",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260606-1605",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260606-1605",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260606-1605",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260606-1605",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260606-1605",
+  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260606-1605"
 };
 
 const playableThemes = Object.keys(themeMusic);
@@ -227,6 +227,37 @@ function getOpeningBubbleCount() {
   return 9 + Math.round(scale * 3);
 }
 
+function getBubbleCapacity() {
+  const pressure = currentPressure();
+  return Math.min(28, 10 + pressure.baseDifficulty * 2 + Math.floor(pressure.roundPressure) + Math.round(boardScale() * 5));
+}
+
+function getBubbleFloor() {
+  const pressure = currentPressure();
+  const remaining = Math.max(0, target - selectedSum());
+  const targetPressure = remaining >= 20 ? 1 : 0;
+  return Math.min(getBubbleCapacity(), 6 + Math.round(boardScale() * 3) + Math.min(2, Math.floor(pressure.roundPressure / 2)) + targetPressure);
+}
+
+function refillBubblesTo(targetCount) {
+  while (bubbles.length < targetCount && bubbles.length < getBubbleCapacity()) {
+    spawnBubble();
+  }
+}
+
+function refillSparseBoard() {
+  const floor = getBubbleFloor();
+  if (bubbles.length >= floor) {
+    return;
+  }
+
+  const refillCount = Math.min(4, floor - bubbles.length);
+  for (let index = 0; index < refillCount; index += 1) {
+    spawnBubble();
+  }
+  spawnTimer = 0;
+}
+
 function selectBubble(id) {
   if (paused || gameOver) {
     return;
@@ -244,6 +275,7 @@ function selectBubble(id) {
     multiplierTurns = 3;
     const reward = addPopTime(bubble);
     popBubble(bubble);
+    refillSparseBoard();
     setMessage(`${bubble.value}x multiplier active. +${formatReward(reward)} seconds.`);
     updateHud();
     return;
@@ -264,6 +296,7 @@ function selectBubble(id) {
     return;
   }
 
+  refillSparseBoard();
   setMessage(`${target - sum} to go. +${formatReward(reward)} seconds.`);
   updateHud();
 }
@@ -283,9 +316,7 @@ function scoreExactSum() {
   }
   target = rollTarget();
   resetRoundTimer();
-  while (bubbles.length < 10) {
-    spawnBubble();
-  }
+  refillBubblesTo(getOpeningBubbleCount());
   if (round % 4 === 0) {
     spawnBubble(true);
   }
@@ -553,9 +584,10 @@ function tick(timestamp) {
     }
     updateBubbles(delta);
     spawnTimer += delta;
+    refillSparseBoard();
     const pressure = currentPressure();
     const spawnEvery = Math.max(620, 3500 - pressure.baseDifficulty * 390 - pressure.roundPressure * 150);
-    const maxBubbles = Math.min(28, 10 + pressure.baseDifficulty * 2 + Math.floor(pressure.roundPressure) + Math.round(boardScale() * 5));
+    const maxBubbles = getBubbleCapacity();
     if (spawnTimer >= spawnEvery && bubbles.length < maxBubbles) {
       spawnTimer = 0;
       spawnBubble();
