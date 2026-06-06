@@ -39,22 +39,32 @@ const endScreen = document.querySelector("#end-screen");
 const endScore = document.querySelector("#end-score");
 const endTime = document.querySelector("#end-time");
 const endRound = document.querySelector("#end-round");
+const endTip = document.querySelector("#end-tip");
 const playAgainButton = document.querySelector("#play-again");
 const endChangeThemeButton = document.querySelector("#end-change-theme");
 const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260606-1251",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260606-1251",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260606-1251",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260606-1251",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260606-1251",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260606-1251"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260606-1302",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260606-1302",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260606-1302",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260606-1302",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260606-1302",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260606-1302"
 };
 
 const playableThemes = Object.keys(themeMusic);
 const bubbleColors = ["#9ee2ff", "#b9efc4", "#d8c3ff", "#ffe08a", "#a9d8ff"];
+const gameOverTips = [
+  "Multipliers add score and time. Use them strategically.",
+  "Bonus bubbles add bigger numbers and give extra time back.",
+  "More time left means a bigger score bonus when you hit the target.",
+  "Going over clears your selection and costs a life.",
+  "Popping any numbered bubble adds time, even before you solve the target.",
+  "Random theme picks a fresh surprise every new run.",
+  "Later rounds get faster, so quick exact matches matter."
+];
 
 let bubbles = [];
 let selected = [];
@@ -527,6 +537,7 @@ function showEndScreen() {
   endScore.textContent = score.toLocaleString();
   endTime.textContent = formatPlayTime(activePlayTime);
   endRound.textContent = round;
+  endTip.textContent = gameOverTips[randomInt(0, gameOverTips.length - 1)];
   endScreen.classList.remove("hidden");
 }
 
