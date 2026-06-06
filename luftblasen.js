@@ -25,6 +25,9 @@ const difficultyName = document.querySelector("#difficulty-name");
 const musicToggle = document.querySelector("#music-enabled");
 const popsToggle = document.querySelector("#pops-enabled");
 const pauseButton = document.querySelector("#pause-game");
+const pauseScreen = document.querySelector("#pause-screen");
+const pauseResumeButton = document.querySelector("#pause-resume");
+const pauseTargetTotal = document.querySelector("#pause-target-total");
 const shell = document.querySelector(".game-shell");
 const splashScreen = document.querySelector("#splash-screen");
 const startButton = document.querySelector("#start-game");
@@ -42,12 +45,12 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260606-1149",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260606-1149",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260606-1149",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260606-1149",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260606-1149",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260606-1149"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260606-1203",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260606-1203",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260606-1203",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260606-1203",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260606-1203",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260606-1203"
 };
 
 const playableThemes = Object.keys(themeMusic);
@@ -96,6 +99,7 @@ function startGame() {
   target = rollTarget();
   resetRoundTimer();
   hideEndScreen();
+  hidePauseScreen();
   playfield.querySelectorAll(".bubble").forEach((bubble) => bubble.remove());
   for (let index = 0; index < 9; index += 1) {
     spawnBubble();
@@ -610,6 +614,35 @@ function resetPauseButton() {
   pauseButton.title = "Pause";
 }
 
+function setPaused(isPaused) {
+  if (gameOver || paused === isPaused) {
+    return;
+  }
+  paused = isPaused;
+  pauseButton.textContent = paused ? "Resume" : "Pause";
+  pauseButton.setAttribute("aria-label", paused ? "Resume game" : "Pause game");
+  pauseButton.title = paused ? "Resume" : "Pause";
+  if (paused) {
+    pauseThemeMusic();
+    showPauseScreen();
+  } else {
+    hidePauseScreen();
+    startThemeMusic();
+  }
+  setMessage(paused ? "Paused." : "Back in motion.");
+}
+
+function showPauseScreen() {
+  if (pauseTargetTotal) {
+    pauseTargetTotal.textContent = target;
+  }
+  pauseScreen?.classList.remove("hidden");
+}
+
+function hidePauseScreen() {
+  pauseScreen?.classList.add("hidden");
+}
+
 document.querySelectorAll(".splash-theme").forEach((button) => {
   button.addEventListener("click", () => {
     document.querySelectorAll(".splash-theme").forEach((theme) => theme.classList.remove("active"));
@@ -634,19 +667,11 @@ musicToggle?.addEventListener("change", () => {
 });
 
 pauseButton?.addEventListener("click", () => {
-  if (gameOver) {
-    return;
-  }
-  paused = !paused;
-  pauseButton.textContent = paused ? "Resume" : "Pause";
-  pauseButton.setAttribute("aria-label", paused ? "Resume game" : "Pause game");
-  pauseButton.title = paused ? "Resume" : "Pause";
-  if (paused) {
-    pauseThemeMusic();
-  } else {
-    startThemeMusic();
-  }
-  setMessage(paused ? "Paused." : "Back in motion.");
+  setPaused(!paused);
+});
+
+pauseResumeButton?.addEventListener("click", () => {
+  setPaused(false);
 });
 
 function updateDifficultyName() {
@@ -705,6 +730,7 @@ function exitToSplash() {
   playfield.querySelectorAll(".bubble").forEach((bubble) => bubble.remove());
   bubbles = [];
   selected = [];
+  hidePauseScreen();
   hideEndScreen();
   splashScreen.classList.remove("hidden");
   document.body.classList.add("show-splash");
