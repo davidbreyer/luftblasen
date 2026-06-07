@@ -46,13 +46,13 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260606-1623",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260606-1623",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260606-1623",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260606-1623",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260606-1623",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260606-1623",
-  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260606-1623"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260606-2112",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260606-2112",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260606-2112",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260606-2112",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260606-2112",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260606-2112",
+  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260606-2112"
 };
 
 const playableThemes = Object.keys(themeMusic);
