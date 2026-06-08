@@ -48,13 +48,13 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260607-2301",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260607-2301",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260607-2301",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260607-2301",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260607-2301",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260607-2301",
-  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260607-2301"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260607-2316",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260607-2316",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260607-2316",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260607-2316",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260607-2316",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260607-2316",
+  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260607-2316"
 };
 
 const playableThemes = Object.keys(themeMusic);
@@ -312,10 +312,14 @@ function selectBubble(id) {
 function scoreExactSum() {
   const bonusCount = selected.filter((bubble) => bubble.isBonus).length;
   const timeBonus = scoreTimeBonus();
-  const points = target * 10 * multiplier + selected.length * 15 + bonusCount * 50 + timeBonus;
-  score += points;
   currentStreak += 1;
   bestStreak = Math.max(bestStreak, currentStreak);
+  const targetPoints = target * 10 * multiplier;
+  const bubblePoints = selected.length * 15;
+  const bonusPoints = bonusCount * 50;
+  const streakBonus = scoreStreakBonus();
+  const points = targetPoints + bubblePoints + bonusPoints + timeBonus + streakBonus;
+  score += points;
   round += 1;
   selected = [];
   if (multiplierTurns > 0) {
@@ -330,9 +334,14 @@ function scoreExactSum() {
   if (round % 4 === 0) {
     spawnBubble(true);
   }
-  setMessage(`Exact! +${points.toLocaleString()} points, including ${timeBonus.toLocaleString()} time bonus.`);
+  const streakNote = streakBonus > 0 ? ` and ${streakBonus.toLocaleString()} streak bonus` : "";
+  setMessage(`Exact! +${points.toLocaleString()} points, including ${timeBonus.toLocaleString()} time bonus${streakNote}.`);
   announceBoard("Next Target", target, "success");
   updateHud();
+}
+
+function scoreStreakBonus() {
+  return target * 10 * Math.min(Math.max(0, currentStreak - 1), 5);
 }
 
 function scoreTimeBonus() {
