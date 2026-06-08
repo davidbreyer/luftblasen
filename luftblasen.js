@@ -39,6 +39,7 @@ const endScreen = document.querySelector("#end-screen");
 const endScore = document.querySelector("#end-score");
 const endTime = document.querySelector("#end-time");
 const endRound = document.querySelector("#end-round");
+const endStreak = document.querySelector("#end-streak");
 const endTip = document.querySelector("#end-tip");
 const playAgainButton = document.querySelector("#play-again");
 const endChangeThemeButton = document.querySelector("#end-change-theme");
@@ -46,13 +47,13 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260606-2112",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260606-2112",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260606-2112",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260606-2112",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260606-2112",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260606-2112",
-  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260606-2112"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260607-2250",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260607-2250",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260607-2250",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260607-2250",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260607-2250",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260607-2250",
+  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260607-2250"
 };
 
 const playableThemes = Object.keys(themeMusic);
@@ -76,6 +77,8 @@ let lives = 5;
 let target = 18;
 let multiplier = 1;
 let multiplierTurns = 0;
+let currentStreak = 0;
+let bestStreak = 0;
 let paused = false;
 let gameOver = false;
 let bubbleId = 1;
@@ -102,6 +105,8 @@ function startGame() {
   lives = 5;
   multiplier = 1;
   multiplierTurns = 0;
+  currentStreak = 0;
+  bestStreak = 0;
   paused = false;
   gameOver = false;
   started = true;
@@ -306,6 +311,8 @@ function scoreExactSum() {
   const timeBonus = scoreTimeBonus();
   const points = target * 10 * multiplier + selected.length * 15 + bonusCount * 50 + timeBonus;
   score += points;
+  currentStreak += 1;
+  bestStreak = Math.max(bestStreak, currentStreak);
   round += 1;
   selected = [];
   if (multiplierTurns > 0) {
@@ -333,6 +340,7 @@ function scoreTimeBonus() {
 
 function loseLife(reason) {
   lives -= 1;
+  currentStreak = 0;
   selected = [];
   if (lives <= 0) {
     gameOver = true;
@@ -607,6 +615,7 @@ function showEndScreen() {
   endScore.textContent = score.toLocaleString();
   endTime.textContent = formatPlayTime(activePlayTime);
   endRound.textContent = round;
+  endStreak.textContent = bestStreak.toLocaleString();
   endTip.textContent = gameOverTips[randomInt(0, gameOverTips.length - 1)];
   endScreen.classList.remove("hidden");
 }
