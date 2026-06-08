@@ -40,6 +40,7 @@ const endScore = document.querySelector("#end-score");
 const endTime = document.querySelector("#end-time");
 const endRound = document.querySelector("#end-round");
 const endStreak = document.querySelector("#end-streak");
+const endPopped = document.querySelector("#end-popped");
 const endTip = document.querySelector("#end-tip");
 const playAgainButton = document.querySelector("#play-again");
 const endChangeThemeButton = document.querySelector("#end-change-theme");
@@ -47,13 +48,13 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260607-2250",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260607-2250",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260607-2250",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260607-2250",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260607-2250",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260607-2250",
-  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260607-2250"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260607-2301",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260607-2301",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260607-2301",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260607-2301",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260607-2301",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260607-2301",
+  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260607-2301"
 };
 
 const playableThemes = Object.keys(themeMusic);
@@ -79,6 +80,7 @@ let multiplier = 1;
 let multiplierTurns = 0;
 let currentStreak = 0;
 let bestStreak = 0;
+let bubblesPopped = 0;
 let paused = false;
 let gameOver = false;
 let bubbleId = 1;
@@ -107,6 +109,7 @@ function startGame() {
   multiplierTurns = 0;
   currentStreak = 0;
   bestStreak = 0;
+  bubblesPopped = 0;
   paused = false;
   gameOver = false;
   started = true;
@@ -368,6 +371,7 @@ function popBubble(bubble, withSound = true) {
   bubble.element.classList.add("popped");
   bubbles = bubbles.filter((item) => item.id !== bubble.id);
   if (withSound) {
+    bubblesPopped += 1;
     playPopSound();
   }
   window.setTimeout(() => bubble.element.remove(), 90);
@@ -616,6 +620,7 @@ function showEndScreen() {
   endTime.textContent = formatPlayTime(activePlayTime);
   endRound.textContent = round;
   endStreak.textContent = bestStreak.toLocaleString();
+  endPopped.textContent = bubblesPopped.toLocaleString();
   endTip.textContent = gameOverTips[randomInt(0, gameOverTips.length - 1)];
   endScreen.classList.remove("hidden");
 }
