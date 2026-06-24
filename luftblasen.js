@@ -48,20 +48,20 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260624-1544",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260624-1544",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260624-1544",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260624-1544",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260624-1544",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260624-1544",
-  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260624-1544"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260624-1713",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260624-1713",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260624-1713",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260624-1713",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260624-1713",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260624-1713",
+  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260624-1713"
 };
 
 const playableThemes = Object.keys(themeMusic);
 const bubbleColors = ["#9ee2ff", "#b9efc4", "#d8c3ff", "#ffe08a", "#a9d8ff"];
 const reduceMotionQuery = window.matchMedia?.("(prefers-reduced-motion: reduce)");
 const gameOverTips = [
-  "Multipliers add score and time. Use them strategically.",
+  "Multipliers stack up to 6x, then apply to your next exact match.",
   "Bonus bubbles add bigger numbers and give extra time back.",
   "More time left means a bigger score bonus when you hit the target.",
   "Going over clears your selection and costs a life.",
@@ -281,12 +281,14 @@ function selectBubble(id) {
   bubble.selected = true;
 
   if (bubble.isMultiplier) {
-    multiplier = bubble.value;
-    multiplierTurns = 3;
+    const previousMultiplier = multiplier;
+    multiplier = Math.min(6, multiplier * bubble.value);
+    multiplierTurns = 1;
     const reward = addPopTime(bubble);
     popBubble(bubble);
     refillSparseBoard();
-    setMessage(`${bubble.value}x multiplier active. +${formatReward(reward)} seconds.`);
+    const stackNote = previousMultiplier > 1 ? ` Stacked to ${multiplier}x.` : "";
+    setMessage(`${bubble.value}x multiplier ready for the next exact match.${stackNote} +${formatReward(reward)} seconds.`);
     updateHud();
     return;
   }
@@ -322,13 +324,11 @@ function scoreExactSum() {
   const streakBonus = scoreStreakBonus();
   const points = targetPoints + bubblePoints + bonusPoints + timeBonus + streakBonus;
   score += points;
+  const spentMultiplier = multiplier;
   round += 1;
   selected = [];
-  if (multiplierTurns > 0) {
-    multiplierTurns -= 1;
-    if (multiplierTurns === 0) {
-      multiplier = 1;
-    }
+  if (spentMultiplier > 1) {
+    resetMultiplier();
   }
   target = rollTarget();
   resetRoundTimer();
@@ -336,8 +336,9 @@ function scoreExactSum() {
   if (round % 4 === 0) {
     spawnBubble(true);
   }
+  const multiplierNote = spentMultiplier > 1 ? `, ${spentMultiplier}x multiplier` : "";
   const streakNote = streakBonus > 0 ? ` and ${streakBonus.toLocaleString()} streak bonus` : "";
-  setMessage(`Exact! +${points.toLocaleString()} points, including ${timeBonus.toLocaleString()} time bonus${streakNote}.`);
+  setMessage(`Exact! +${points.toLocaleString()} points, including ${timeBonus.toLocaleString()} time bonus${multiplierNote}${streakNote}.`);
   playSuccessSound(streakBonus > 0);
   announceBoard("Next Target", target, "success");
   updateHud();
@@ -632,7 +633,7 @@ function updateHud() {
   livesText.textContent = "♥".repeat(Math.max(0, lives));
   fieldLives.textContent = "♥".repeat(Math.max(0, lives));
   fieldTime.textContent = Math.ceil(roundTimeRemaining / 1000);
-  multiplierText.textContent = `${multiplier}x${multiplierTurns > 0 ? ` · ${multiplierTurns}` : ""}`;
+  multiplierText.textContent = multiplierTurns > 0 ? `${multiplier}x next` : "1x";
   sumMeter.style.width = `${Math.min(100, (sum / target) * 100)}%`;
   sumMeter.style.background = sum > target ? "var(--danger)" : "linear-gradient(90deg, var(--accent), var(--good))";
   const timeRatio = Math.max(0, roundTimeRemaining / roundTimeLimit);

@@ -30,7 +30,7 @@ The end screen shows your final score, time played, and round reached, with opti
 Exact matches score from the target, the number of bubbles used, any bonus bubbles, the active multiplier, and how much time is left on the timer.
 
 - More time left means a larger time bonus.
-- Multiplier bubbles also multiply the time bonus while they are active.
+- Multiplier bubbles stack up to 6x and multiply the next exact match, including the time bonus.
 - Bonus bubbles add an extra fixed score bonus on top of their larger number value.
 
 ## Timer
@@ -48,7 +48,7 @@ Bonus bubbles are worth larger numbers and give a larger timer reward when poppe
 
 ![Bonus bubble](assets/luftblasen/images/bubblebonus.png)
 
-Multiplier bubbles do not add to the current sum. Instead, they activate a score multiplier for the next three exact sums.
+Multiplier bubbles do not add to the current sum. Instead, they stack into a one-shot score multiplier for the next exact sum. The stack caps at 6x.
 
 ![Multiplier bubble](assets/luftblasen/images/bubblemultiplier.png)
 
