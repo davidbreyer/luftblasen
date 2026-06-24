@@ -48,13 +48,13 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260607-2316",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260607-2316",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260607-2316",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260607-2316",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260607-2316",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260607-2316",
-  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260607-2316"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260623-2207",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260623-2207",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260623-2207",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260623-2207",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260623-2207",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260623-2207",
+  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260623-2207"
 };
 
 const playableThemes = Object.keys(themeMusic);
@@ -93,6 +93,7 @@ let roundTimeRemaining = 12000;
 let activePlayTime = 0;
 let announcementTimer;
 let selectedThemeChoice = "classic";
+let lastLowTimeTickSecond = null;
 
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.45;
@@ -116,6 +117,7 @@ function startGame() {
   activePlayTime = 0;
   bubbleId = 1;
   spawnTimer = 0;
+  lastLowTimeTickSecond = null;
   target = rollTarget();
   resetRoundTimer();
   hideEndScreen();
@@ -157,6 +159,7 @@ function currentPressure() {
 function resetRoundTimer() {
   roundTimeLimit = rollRoundTimeLimit();
   roundTimeRemaining = roundTimeLimit;
+  lastLowTimeTickSecond = null;
 }
 
 function spawnBubble(forceMultiplier = false) {
@@ -336,6 +339,7 @@ function scoreExactSum() {
   }
   const streakNote = streakBonus > 0 ? ` and ${streakBonus.toLocaleString()} streak bonus` : "";
   setMessage(`Exact! +${points.toLocaleString()} points, including ${timeBonus.toLocaleString()} time bonus${streakNote}.`);
+  playSuccessSound(streakBonus > 0);
   announceBoard("Next Target", target, "success");
   updateHud();
 }
@@ -353,6 +357,7 @@ function scoreTimeBonus() {
 function loseLife(reason) {
   lives -= 1;
   currentStreak = 0;
+  lastLowTimeTickSecond = null;
   selected = [];
   if (lives <= 0) {
     gameOver = true;
@@ -362,6 +367,7 @@ function loseLife(reason) {
     setMessage(`Game over. Final score: ${score.toLocaleString()}.`);
     showEndScreen();
   } else {
+    playLifeLostSound();
     resetRoundTimer();
     setMessage(`${reason} ${lives} ${lives === 1 ? "life" : "lives"} left.`);
     const kicker = reason.startsWith("Time up") ? "Time Up" : reason.startsWith("Too high") ? "Too High" : "Try Again";
@@ -457,6 +463,85 @@ function playSynthPop() {
   oscillator.connect(gain).connect(context.destination);
   oscillator.start(now);
   oscillator.stop(now + 0.1);
+}
+
+function playTone({ frequency, start, duration, type = "sine", peak = 0.12, endFrequency = frequency, destination }) {
+  const context = ensureAudioContext();
+  if (!context || !destination) {
+    return;
+  }
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, start);
+  if (endFrequency !== frequency) {
+    oscillator.frequency.exponentialRampToValueAtTime(Math.max(40, endFrequency), start + duration);
+  }
+  gain.gain.setValueAtTime(0.001, start);
+  gain.gain.exponentialRampToValueAtTime(peak, start + 0.018);
+  gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+  oscillator.connect(gain).connect(destination);
+  oscillator.start(start);
+  oscillator.stop(start + duration + 0.04);
+}
+
+function playSuccessSound(hasStreakBonus = false) {
+  if (!popsEnabled()) {
+    return;
+  }
+  const context = ensureAudioContext();
+  if (!context) {
+    return;
+  }
+  const now = context.currentTime;
+  const master = context.createGain();
+  master.gain.setValueAtTime(0.13, now);
+  master.gain.exponentialRampToValueAtTime(0.001, now + (hasStreakBonus ? 0.7 : 0.48));
+  master.connect(context.destination);
+
+  [
+    { frequency: 523.25, delay: 0 },
+    { frequency: 659.25, delay: 0.08 },
+    { frequency: 783.99, delay: 0.16 }
+  ].forEach(({ frequency, delay }) => {
+    playTone({ frequency, start: now + delay, duration: 0.18, type: "triangle", peak: 0.75, destination: master });
+  });
+
+  if (hasStreakBonus) {
+    playTone({ frequency: 1046.5, start: now + 0.32, duration: 0.26, type: "sine", peak: 0.55, destination: master });
+  }
+}
+
+function playLifeLostSound() {
+  if (!popsEnabled()) {
+    return;
+  }
+  const context = ensureAudioContext();
+  if (!context) {
+    return;
+  }
+  const now = context.currentTime;
+  const master = context.createGain();
+  master.gain.setValueAtTime(0.14, now);
+  master.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+  master.connect(context.destination);
+  playTone({ frequency: 220, endFrequency: 95, start: now, duration: 0.28, type: "sawtooth", peak: 0.55, destination: master });
+}
+
+function playLowTimeTick() {
+  if (!popsEnabled()) {
+    return;
+  }
+  const context = ensureAudioContext();
+  if (!context) {
+    return;
+  }
+  const now = context.currentTime;
+  const master = context.createGain();
+  master.gain.setValueAtTime(0.08, now);
+  master.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+  master.connect(context.destination);
+  playTone({ frequency: 880, endFrequency: 660, start: now, duration: 0.07, type: "square", peak: 0.45, destination: master });
 }
 
 function playGameOverSound() {
@@ -604,6 +689,11 @@ function tick(timestamp) {
       loseLife("Time up. Selection cleared.");
       window.requestAnimationFrame(tick);
       return;
+    }
+    const lowTimeSecond = Math.ceil(roundTimeRemaining / 1000);
+    if (lowTimeSecond <= 5 && lowTimeSecond > 0 && lowTimeSecond !== lastLowTimeTickSecond) {
+      lastLowTimeTickSecond = lowTimeSecond;
+      playLowTimeTick();
     }
     updateBubbles(delta);
     spawnTimer += delta;
