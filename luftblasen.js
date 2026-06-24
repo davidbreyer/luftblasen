@@ -48,13 +48,13 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260623-2207",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260623-2207",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260623-2207",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260623-2207",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260623-2207",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260623-2207",
-  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260623-2207"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260623-2230",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260623-2230",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260623-2230",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260623-2230",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260623-2230",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260623-2230",
+  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260623-2230"
 };
 
 const playableThemes = Object.keys(themeMusic);
@@ -495,7 +495,7 @@ function playSuccessSound(hasStreakBonus = false) {
   }
   const now = context.currentTime;
   const master = context.createGain();
-  master.gain.setValueAtTime(0.13, now);
+  master.gain.setValueAtTime(0.2, now);
   master.gain.exponentialRampToValueAtTime(0.001, now + (hasStreakBonus ? 0.7 : 0.48));
   master.connect(context.destination);
 
@@ -504,11 +504,11 @@ function playSuccessSound(hasStreakBonus = false) {
     { frequency: 659.25, delay: 0.08 },
     { frequency: 783.99, delay: 0.16 }
   ].forEach(({ frequency, delay }) => {
-    playTone({ frequency, start: now + delay, duration: 0.18, type: "triangle", peak: 0.75, destination: master });
+    playTone({ frequency, start: now + delay, duration: 0.18, type: "triangle", peak: 0.82, destination: master });
   });
 
   if (hasStreakBonus) {
-    playTone({ frequency: 1046.5, start: now + 0.32, duration: 0.26, type: "sine", peak: 0.55, destination: master });
+    playTone({ frequency: 1046.5, start: now + 0.32, duration: 0.26, type: "sine", peak: 0.72, destination: master });
   }
 }
 
@@ -522,10 +522,10 @@ function playLifeLostSound() {
   }
   const now = context.currentTime;
   const master = context.createGain();
-  master.gain.setValueAtTime(0.14, now);
+  master.gain.setValueAtTime(0.22, now);
   master.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
   master.connect(context.destination);
-  playTone({ frequency: 220, endFrequency: 95, start: now, duration: 0.28, type: "sawtooth", peak: 0.55, destination: master });
+  playTone({ frequency: 220, endFrequency: 95, start: now, duration: 0.28, type: "sawtooth", peak: 0.72, destination: master });
 }
 
 function playLowTimeTick() {
@@ -538,10 +538,10 @@ function playLowTimeTick() {
   }
   const now = context.currentTime;
   const master = context.createGain();
-  master.gain.setValueAtTime(0.08, now);
+  master.gain.setValueAtTime(0.13, now);
   master.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
   master.connect(context.destination);
-  playTone({ frequency: 880, endFrequency: 660, start: now, duration: 0.07, type: "square", peak: 0.45, destination: master });
+  playTone({ frequency: 880, endFrequency: 660, start: now, duration: 0.07, type: "square", peak: 0.62, destination: master });
 }
 
 function playGameOverSound() {
