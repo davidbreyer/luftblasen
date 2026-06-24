@@ -48,13 +48,13 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260623-2237",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260623-2237",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260623-2237",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260623-2237",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260623-2237",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260623-2237",
-  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260623-2237"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260624-1544",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260624-1544",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260624-1544",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260624-1544",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260624-1544",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260624-1544",
+  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260624-1544"
 };
 
 const playableThemes = Object.keys(themeMusic);
@@ -106,8 +106,7 @@ function startGame() {
   score = 0;
   round = 1;
   lives = 5;
-  multiplier = 1;
-  multiplierTurns = 0;
+  resetMultiplier();
   currentStreak = 0;
   bestStreak = 0;
   bubblesPopped = 0;
@@ -348,6 +347,11 @@ function scoreStreakBonus() {
   return target * 10 * Math.min(Math.max(0, currentStreak - 1), 5);
 }
 
+function resetMultiplier() {
+  multiplier = 1;
+  multiplierTurns = 0;
+}
+
 function scoreTimeBonus() {
   const maxRatio = 1.35;
   const timeRatio = Math.min(maxRatio, Math.max(0, roundTimeRemaining / roundTimeLimit));
@@ -357,6 +361,7 @@ function scoreTimeBonus() {
 function loseLife(reason) {
   lives -= 1;
   currentStreak = 0;
+  resetMultiplier();
   lastLowTimeTickSecond = null;
   selected = [];
   if (lives <= 0) {
