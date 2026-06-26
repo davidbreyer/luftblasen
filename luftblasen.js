@@ -20,6 +20,9 @@ const fieldMessage = document.querySelector("#field-message");
 const fieldAnnouncement = document.querySelector("#field-announcement");
 const announcementKicker = document.querySelector("#announcement-kicker");
 const announcementValue = document.querySelector("#announcement-value");
+const scorePop = document.querySelector("#score-pop");
+const scorePopTotal = document.querySelector("#score-pop-total");
+const scorePopDetail = document.querySelector("#score-pop-detail");
 const difficultyInput = document.querySelector("#difficulty");
 const difficultyName = document.querySelector("#difficulty-name");
 const musicToggle = document.querySelector("#music-enabled");
@@ -48,13 +51,13 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260624-1713",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260624-1713",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260624-1713",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260624-1713",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260624-1713",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260624-1713",
-  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260624-1713"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260625-2220",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260625-2220",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260625-2220",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260625-2220",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260625-2220",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260625-2220",
+  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260625-2220"
 };
 
 const playableThemes = Object.keys(themeMusic);
@@ -92,6 +95,7 @@ let roundTimeLimit = 12000;
 let roundTimeRemaining = 12000;
 let activePlayTime = 0;
 let announcementTimer;
+let scorePopTimer;
 let selectedThemeChoice = "classic";
 let lastLowTimeTickSecond = null;
 
@@ -339,6 +343,7 @@ function scoreExactSum() {
   const multiplierNote = spentMultiplier > 1 ? `, ${spentMultiplier}x multiplier` : "";
   const streakNote = streakBonus > 0 ? ` and ${streakBonus.toLocaleString()} streak bonus` : "";
   setMessage(`Exact! +${points.toLocaleString()} points, including ${timeBonus.toLocaleString()} time bonus${multiplierNote}${streakNote}.`);
+  showScorePop(points, { timeBonus, streakBonus, multiplier: spentMultiplier });
   playSuccessSound(streakBonus > 0);
   announceBoard("Next Target", target, "success");
   updateHud();
@@ -678,6 +683,33 @@ function announceBoard(kicker, value, tone = "") {
       fieldAnnouncement.classList.add("hidden");
     }, 180);
   }, 1150);
+}
+
+function showScorePop(points, { timeBonus = 0, streakBonus = 0, multiplier: usedMultiplier = 1 } = {}) {
+  if (!scorePop) {
+    return;
+  }
+  window.clearTimeout(scorePopTimer);
+  const details = [];
+  if (usedMultiplier > 1) {
+    details.push(`${usedMultiplier}x`);
+  }
+  if (streakBonus > 0) {
+    details.push(`streak +${streakBonus.toLocaleString()}`);
+  }
+  if (timeBonus > 0) {
+    details.push(`time +${timeBonus.toLocaleString()}`);
+  }
+
+  scorePopTotal.textContent = `+${points.toLocaleString()}`;
+  scorePopDetail.textContent = details.slice(0, 2).join(" · ");
+  scorePop.classList.remove("hidden", "show");
+  void scorePop.offsetWidth;
+  scorePop.classList.add("show");
+  scorePopTimer = window.setTimeout(() => {
+    scorePop.classList.remove("show");
+    scorePop.classList.add("hidden");
+  }, 1180);
 }
 
 function tick(timestamp) {
