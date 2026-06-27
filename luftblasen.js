@@ -51,13 +51,13 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260625-2220",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260625-2220",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260625-2220",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260625-2220",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260625-2220",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260625-2220",
-  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260625-2220"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260627-1110",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260627-1110",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260627-1110",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260627-1110",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260627-1110",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260627-1110",
+  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260627-1110"
 };
 
 const playableThemes = Object.keys(themeMusic);
@@ -98,6 +98,9 @@ let announcementTimer;
 let scorePopTimer;
 let selectedThemeChoice = "classic";
 let lastLowTimeTickSecond = null;
+let displayedTimeSecond = null;
+let lastTimerTone = "";
+let lastTimeLow = false;
 
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.45;
@@ -163,6 +166,7 @@ function resetRoundTimer() {
   roundTimeLimit = rollRoundTimeLimit();
   roundTimeRemaining = roundTimeLimit;
   lastLowTimeTickSecond = null;
+  resetTimerHudCache();
 }
 
 function spawnBubble(forceMultiplier = false) {
@@ -199,8 +203,7 @@ function spawnBubble(forceMultiplier = false) {
   const pressure = currentPressure();
   const speed = (4 + pressure.effectiveDifficulty * pressure.effectiveDifficulty * 1.35 + round * 0.18) / 1000;
 
-  bubble.style.left = `${position.x}px`;
-  bubble.style.top = `${position.y}px`;
+  setBubblePosition(bubble, position.x, position.y);
   bubble.addEventListener("pointerdown", (event) => {
     event.preventDefault();
     selectBubble(id);
@@ -225,6 +228,11 @@ function spawnBubble(forceMultiplier = false) {
     size,
     selected: false
   });
+}
+
+function setBubblePosition(element, x, y) {
+  element.style.setProperty("--x", `${x}px`);
+  element.style.setProperty("--y", `${y}px`);
 }
 
 function boardScale(rect = playfield.getBoundingClientRect()) {
@@ -625,6 +633,11 @@ function selectedSum() {
 }
 
 function updateHud() {
+  updateGameHud();
+  updateTimerHud();
+}
+
+function updateGameHud() {
   const sum = selectedSum();
   targetTotal.textContent = target;
   fieldTargetTotal.textContent = target;
@@ -637,25 +650,49 @@ function updateHud() {
   fieldRound.textContent = round;
   livesText.textContent = "♥".repeat(Math.max(0, lives));
   fieldLives.textContent = "♥".repeat(Math.max(0, lives));
-  fieldTime.textContent = Math.ceil(roundTimeRemaining / 1000);
   multiplierText.textContent = multiplierTurns > 0 ? `${multiplier}x next` : "1x";
   sumMeter.style.width = `${Math.min(100, (sum / target) * 100)}%`;
   sumMeter.style.background = sum > target ? "var(--danger)" : "linear-gradient(90deg, var(--accent), var(--good))";
+}
+
+function updateTimerHud() {
   const timeRatio = Math.max(0, roundTimeRemaining / roundTimeLimit);
+  const displaySecond = Math.ceil(roundTimeRemaining / 1000);
   const isTimeLow = started && !paused && !gameOver && roundTimeRemaining > 0 && roundTimeRemaining <= 5000;
   const isCritical = timeRatio <= 0.18 || roundTimeRemaining <= 2500;
   const isWarning = !isCritical && (timeRatio <= 0.38 || roundTimeRemaining <= 5000);
+  const timerTone = isCritical ? "critical" : isWarning ? "warning" : "normal";
+
+  if (displaySecond !== displayedTimeSecond) {
+    fieldTime.textContent = displaySecond;
+    displayedTimeSecond = displaySecond;
+  }
+
   fieldTimerBar.style.transform = `scaleX(${timeRatio})`;
-  fieldTimerBar.style.background = isCritical
-    ? "linear-gradient(90deg, #ff2f2f, #ff8a7a)"
-    : isWarning
-      ? "linear-gradient(90deg, var(--gold), #ffcf5a)"
-      : "linear-gradient(90deg, var(--good), var(--gold))";
-  fieldTimer?.classList.toggle("warning", isWarning);
-  fieldTimer?.classList.toggle("critical", isCritical);
-  timerStat?.classList.toggle("warning", isWarning);
-  timerStat?.classList.toggle("critical", isCritical);
-  playfield?.classList.toggle("time-low", isTimeLow);
+
+  if (timerTone !== lastTimerTone) {
+    fieldTimerBar.style.background = isCritical
+      ? "linear-gradient(90deg, #ff2f2f, #ff8a7a)"
+      : isWarning
+        ? "linear-gradient(90deg, var(--gold), #ffcf5a)"
+        : "linear-gradient(90deg, var(--good), var(--gold))";
+    fieldTimer?.classList.toggle("warning", isWarning);
+    fieldTimer?.classList.toggle("critical", isCritical);
+    timerStat?.classList.toggle("warning", isWarning);
+    timerStat?.classList.toggle("critical", isCritical);
+    lastTimerTone = timerTone;
+  }
+
+  if (isTimeLow !== lastTimeLow) {
+    playfield?.classList.toggle("time-low", isTimeLow);
+    lastTimeLow = isTimeLow;
+  }
+}
+
+function resetTimerHudCache() {
+  displayedTimeSecond = null;
+  lastTimerTone = "";
+  lastTimeLow = false;
 }
 
 function setMessage(text) {
@@ -743,7 +780,7 @@ function tick(timestamp) {
       spawnTimer = 0;
       spawnBubble();
     }
-    updateHud();
+    updateTimerHud();
   }
 
   window.requestAnimationFrame(tick);
@@ -783,8 +820,7 @@ function updateBubbles(delta) {
     bubble.swayTime += delta;
     const sway = Math.sin(bubble.swayPhase + (bubble.swayTime / bubble.swayDuration) * Math.PI * 2) * bubble.swayAmplitude;
     bubble.x = Math.max(4, Math.min(rect.width - bubble.size - 4, bubble.baseX + sway));
-    bubble.element.style.left = `${bubble.x}px`;
-    bubble.element.style.top = `${bubble.y}px`;
+    setBubblePosition(bubble.element, bubble.x, bubble.y);
 
     if (bubble.y < -bubble.size) {
       popBubble(bubble, false);
@@ -862,6 +898,7 @@ function setPaused(isPaused) {
     hidePauseScreen();
     startThemeMusic();
   }
+  updateTimerHud();
   setMessage(paused ? "Paused." : "Back in motion.");
 }
 
