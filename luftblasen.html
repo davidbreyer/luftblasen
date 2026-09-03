@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no">
     <title>Luftblasen</title>
-    <link rel="stylesheet" href="luftblasen.css?v=20260627-1110">
+    <link rel="stylesheet" href="luftblasen.css?v=20260903-1848">
   </head>
   <body class="show-splash" data-theme="classic">
     <main class="game-shell" data-theme="classic">
       <section class="splash-screen" id="splash-screen" aria-labelledby="splash-title">
         <div class="splash-brand">
           <h1 id="splash-title">Luftblasen</h1>
-          <img class="splash-logo" src="assets/luftblasen/images/luftblasen-logo.webp?v=20260627-1110" alt="Luftblasen">
+          <img class="splash-logo" src="assets/luftblasen/images/luftblasen-logo.webp?v=20260903-1848" alt="Luftblasen">
           <p>A modern remake of the original math puzzler.</p>
         </div>
         <div class="splash-theme-grid" id="splash-theme-list" aria-label="Choose theme">
@@ -68,7 +68,7 @@
           <button class="start-button" id="start-game" type="button">Start Game</button>
           <button class="how-button" id="how-to-play" type="button">How to Play</button>
         </div>
-        <footer class="splash-version">v<span data-version>20260627-1110</span></footer>
+        <footer class="splash-version">v<span data-version>20260903-1848</span></footer>
         <div class="how-panel hidden" id="how-panel" role="dialog" aria-modal="true" aria-labelledby="how-title">
           <div class="how-card">
             <button class="how-close" id="close-how" type="button" aria-label="Close how to play">&times;</button>
@@ -88,7 +88,7 @@
               </section>
               <section>
                 <b>Multipliers are power-ups.</b>
-                <p>Multiplier bubbles do not add to your sum. They stack up to 6x and boost your next exact match.</p>
+                <p>Unnumbered bubbles are power-ups, so they never add to your sum. Their three artwork styles give 2x, 3x, or 4x and stack up to 6x for your next exact match.</p>
               </section>
               <section>
                 <b>Keep five lives alive.</b>
@@ -174,18 +174,18 @@
             <div class="pause-screen hidden" id="pause-screen" role="dialog" aria-modal="true" aria-labelledby="pause-title">
               <div class="pause-panel">
                 <h2 id="pause-title">Paused</h2>
-                <div class="pause-bubbles" aria-label="Bubble types">
+                <div class="pause-bubbles" aria-label="Multiplier power-up types">
                   <div>
                     <span class="pause-bubble regular" aria-hidden="true"></span>
-                    <strong>Regular</strong>
+                    <strong>2x Power</strong>
                   </div>
                   <div>
                     <span class="pause-bubble bonus" aria-hidden="true"></span>
-                    <strong>Bonus</strong>
+                    <strong>3x Power</strong>
                   </div>
                   <div>
                     <span class="pause-bubble multiplier" aria-hidden="true"></span>
-                    <strong>Multiplier</strong>
+                    <strong>4x Power</strong>
                   </div>
                 </div>
                 <div class="pause-target">
@@ -233,6 +233,6 @@
       </section>
     </main>
 
-    <script src="luftblasen.js?v=20260627-1110"></script>
+    <script src="luftblasen.js?v=20260903-1848"></script>
   </body>
 </html>

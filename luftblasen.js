@@ -51,20 +51,20 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260627-1110",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260627-1110",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260627-1110",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260627-1110",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260627-1110",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260627-1110",
-  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260627-1110"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260903-1848",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260903-1848",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260903-1848",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260903-1848",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260903-1848",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260903-1848",
+  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260903-1848"
 };
 
 const playableThemes = Object.keys(themeMusic);
 const bubbleColors = ["#9ee2ff", "#b9efc4", "#d8c3ff", "#ffe08a", "#a9d8ff"];
 const reduceMotionQuery = window.matchMedia?.("(prefers-reduced-motion: reduce)");
 const gameOverTips = [
-  "Multipliers stack up to 6x, then apply to your next exact match.",
+  "Unnumbered power-up bubbles stack up to 6x, then boost your next exact match.",
   "Bonus bubbles add bigger numbers and give extra time back.",
   "More time left means a bigger score bonus when you hit the target.",
   "Going over clears your selection and costs a life.",
@@ -180,16 +180,19 @@ function spawnBubble(forceMultiplier = false) {
   const isMultiplier = forceMultiplier || roll < 0.1;
   const isBonus = !isMultiplier && roll >= 0.1 && roll < 0.24;
   const baseValue = randomInt(1, Math.min(9 + Math.floor(round / 3), 15));
-  const value = isMultiplier ? (Math.random() < 0.72 ? 2 : 3) : isBonus ? baseValue * 3 : baseValue;
+  const value = isMultiplier ? rollMultiplierValue() : isBonus ? baseValue * 3 : baseValue;
   const bubble = document.createElement("button");
   const id = bubbleId;
   bubbleId += 1;
-  bubble.className = `bubble${isMultiplier ? " multiplier" : ""}${isBonus ? " bonus" : ""}`;
+  bubble.className = `bubble${isMultiplier ? ` multiplier multiplier-${value}` : ""}${isBonus ? " bonus" : ""}`;
   bubble.type = "button";
   bubble.dataset.id = id;
   bubble.dataset.value = value;
   bubble.dataset.kind = isMultiplier ? "multiplier" : isBonus ? "bonus" : "number";
-  bubble.textContent = isMultiplier ? `${value}x` : value;
+  bubble.textContent = isMultiplier ? "" : value;
+  if (isMultiplier) {
+    bubble.setAttribute("aria-label", "Multiplier power-up bubble");
+  }
   bubble.style.setProperty("--size", `${size}px`);
   bubble.style.setProperty("--bubble-color", bubbleColors[randomInt(0, bubbleColors.length - 1)]);
 
@@ -228,6 +231,17 @@ function spawnBubble(forceMultiplier = false) {
     size,
     selected: false
   });
+}
+
+function rollMultiplierValue() {
+  const roll = Math.random();
+  if (roll < 0.6) {
+    return 2;
+  }
+  if (roll < 0.9) {
+    return 3;
+  }
+  return 4;
 }
 
 function setBubblePosition(element, x, y) {
