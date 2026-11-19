@@ -25,6 +25,20 @@ Each round gives you a target number. Pop numbered bubbles until your current su
 
 The end screen shows your final score, time played, and round reached, with options to play again or return to theme selection.
 
+## Local Scores and Settings
+
+Completed games are saved automatically in this browser using `localStorage`. Each difficulty keeps its top 10 scores, including the round reached, active play time, best streak, bubbles popped, date, theme, and scoring version. Exiting an unfinished game does not save a score.
+
+The title screen shows your personal best for the selected difficulty. Expand it to see the top 10. The end screen shows that difficulty's best score and celebrates a new record. Theme choice (including Random), difficulty, music, and pop sound settings are also remembered.
+
+Records stay in the same browser and site; they do not sync across devices. Clearing site data removes them. If storage is unavailable or full, the game keeps working with scores held for the current page session and shows a saving notice.
+
+Run the local storage checks with Node.js:
+
+```powershell
+node --test tests/local-storage.test.cjs
+```
+
 ## Scoring
 
 Exact matches score from the target, the number of bubbles used, any bonus bubbles, the active multiplier, and how much time is left on the timer.

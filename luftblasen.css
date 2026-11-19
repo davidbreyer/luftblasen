@@ -10,8 +10,8 @@
   --danger: #e94040;
   --gold: #f2a51a;
   --bubble: #d7f1ff;
-  --play-bg: url("assets/luftblasen/images/backgrounds/classic-theme-background.webp?v=20260903-1848");
-  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-classic-sprite.png?v=20260903-1848");
+  --play-bg: url("assets/luftblasen/images/backgrounds/classic-theme-background.webp?v=20261118-2122");
+  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-classic-sprite.png?v=20261118-2122");
   --page-bg-a: #dff3ff;
   --page-bg-b: #f8fcff;
   --page-bg-c: #fff8df;
@@ -78,7 +78,8 @@ body:not(.show-splash) .game-shell {
   z-index: 100;
   display: grid;
   place-items: center;
-  align-content: center;
+  align-content: safe center;
+  overflow-y: auto;
   gap: 18px;
   padding: 22px;
   background:
@@ -177,6 +178,57 @@ body:not(.show-splash) .game-shell {
   gap: 8px;
 }
 
+.high-scores {
+  width: min(520px, 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 18px;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.high-scores summary {
+  color: var(--accent-strong);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.high-scores p,
+.high-scores small,
+.storage-note {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.high-scores ol {
+  max-height: 220px;
+  overflow-y: auto;
+  padding-left: 24px;
+}
+
+.high-scores li {
+  padding: 5px 0;
+  font-size: 0.85rem;
+}
+
+.high-scores li span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.end-record {
+  margin: -8px 0 12px;
+  color: var(--good);
+  font-weight: 950;
+}
+
+.end-best {
+  margin: -4px 0 14px;
+  color: var(--accent-strong);
+  font-weight: 800;
+}
+
 .sound-toggle {
   display: inline-flex;
   align-items: center;
@@ -233,31 +285,31 @@ body:not(.show-splash) .game-shell {
 }
 
 .splash-theme[data-theme="classic"] .theme-sprite {
-  background-image: url("assets/luftblasen/images/sprites/bubble-classic-sprite.png?v=20260903-1848");
+  background-image: url("assets/luftblasen/images/sprites/bubble-classic-sprite.png?v=20261118-2122");
 }
 
 .splash-theme[data-theme="bavarian"] .theme-sprite {
-  background-image: url("assets/luftblasen/images/sprites/bubble-bavarian-sprite.png?v=20260903-1848");
+  background-image: url("assets/luftblasen/images/sprites/bubble-bavarian-sprite.png?v=20261118-2122");
 }
 
 .splash-theme[data-theme="shamrock"] .theme-sprite {
-  background-image: url("assets/luftblasen/images/sprites/bubble-shamrock-sprite.png?v=20260903-1848");
+  background-image: url("assets/luftblasen/images/sprites/bubble-shamrock-sprite.png?v=20261118-2122");
 }
 
 .splash-theme[data-theme="classical"] .theme-sprite {
-  background-image: url("assets/luftblasen/images/sprites/bubble-classical-sprite.png?v=20260903-1848");
+  background-image: url("assets/luftblasen/images/sprites/bubble-classical-sprite.png?v=20261118-2122");
 }
 
 .splash-theme[data-theme="boardgame"] .theme-sprite {
-  background-image: url("assets/luftblasen/images/sprites/bubble-boardgame-sprite.png?v=20260903-1848");
+  background-image: url("assets/luftblasen/images/sprites/bubble-boardgame-sprite.png?v=20261118-2122");
 }
 
 .splash-theme[data-theme="theme1776"] .theme-sprite {
-  background-image: url("assets/luftblasen/images/sprites/bubble-1776-sprite.png?v=20260903-1848");
+  background-image: url("assets/luftblasen/images/sprites/bubble-1776-sprite.png?v=20261118-2122");
 }
 
 .splash-theme[data-theme="chess"] .theme-sprite {
-  background-image: url("assets/luftblasen/images/sprites/bubble-chess-sprite.png?v=20260903-1848");
+  background-image: url("assets/luftblasen/images/sprites/bubble-chess-sprite.png?v=20261118-2122");
 }
 
 .splash-theme .random-icon {
@@ -625,6 +677,11 @@ body:not(.show-splash) .playfield {
 .end-screen.hidden,
 .pause-screen.hidden {
   display: none;
+}
+
+.end-screen {
+  align-items: safe center;
+  overflow-y: auto;
 }
 
 .end-panel,
@@ -1287,8 +1344,8 @@ body:not(.show-splash) .playfield {
   --page-bg-c: #dceeff;
   --page-glow-a: rgba(240, 160, 0, 0.26);
   --page-glow-b: rgba(21, 101, 216, 0.2);
-  --play-bg: url("assets/luftblasen/images/backgrounds/bavarian-theme-background.webp?v=20260903-1848");
-  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-bavarian-sprite.png?v=20260903-1848");
+  --play-bg: url("assets/luftblasen/images/backgrounds/bavarian-theme-background.webp?v=20261118-2122");
+  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-bavarian-sprite.png?v=20261118-2122");
 }
 
 [data-theme="shamrock"] {
@@ -1301,8 +1358,8 @@ body:not(.show-splash) .playfield {
   --page-bg-c: #d9f0ff;
   --page-glow-a: rgba(21, 148, 92, 0.25);
   --page-glow-b: rgba(32, 182, 107, 0.2);
-  --play-bg: url("assets/luftblasen/images/backgrounds/shamrock-theme-background.webp?v=20260903-1848");
-  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-shamrock-sprite.png?v=20260903-1848");
+  --play-bg: url("assets/luftblasen/images/backgrounds/shamrock-theme-background.webp?v=20261118-2122");
+  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-shamrock-sprite.png?v=20261118-2122");
 }
 
 [data-theme="classical"] {
@@ -1315,8 +1372,8 @@ body:not(.show-splash) .playfield {
   --page-bg-c: #fff0cf;
   --page-glow-a: rgba(139, 77, 216, 0.24);
   --page-glow-b: rgba(212, 154, 42, 0.18);
-  --play-bg: url("assets/luftblasen/images/backgrounds/classical-music-background.webp?v=20260903-1848");
-  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-classical-sprite.png?v=20260903-1848");
+  --play-bg: url("assets/luftblasen/images/backgrounds/classical-music-background.webp?v=20261118-2122");
+  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-classical-sprite.png?v=20261118-2122");
 }
 
 [data-theme="boardgame"] {
@@ -1329,8 +1386,8 @@ body:not(.show-splash) .playfield {
   --page-bg-c: #e3f2ce;
   --page-glow-a: rgba(154, 90, 8, 0.22);
   --page-glow-b: rgba(79, 134, 50, 0.2);
-  --play-bg: url("assets/luftblasen/images/backgrounds/board-game-theme-background.webp?v=20260903-1848");
-  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-boardgame-sprite.png?v=20260903-1848");
+  --play-bg: url("assets/luftblasen/images/backgrounds/board-game-theme-background.webp?v=20261118-2122");
+  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-boardgame-sprite.png?v=20261118-2122");
 }
 
 [data-theme="theme1776"] {
@@ -1343,8 +1400,8 @@ body:not(.show-splash) .playfield {
   --page-bg-c: #dce9ff;
   --page-glow-a: rgba(180, 64, 50, 0.22);
   --page-glow-b: rgba(34, 76, 132, 0.22);
-  --play-bg: url("assets/luftblasen/images/backgrounds/1776-theme-background.webp?v=20260903-1848");
-  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-1776-sprite.png?v=20260903-1848");
+  --play-bg: url("assets/luftblasen/images/backgrounds/1776-theme-background.webp?v=20261118-2122");
+  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-1776-sprite.png?v=20261118-2122");
 }
 
 [data-theme="chess"] {
@@ -1357,8 +1414,8 @@ body:not(.show-splash) .playfield {
   --page-bg-c: #cfd8e3;
   --page-glow-a: rgba(143, 106, 45, 0.24);
   --page-glow-b: rgba(39, 53, 75, 0.24);
-  --play-bg: url("assets/luftblasen/images/backgrounds/chess-theme-background.webp?v=20260903-1848");
-  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-chess-sprite.png?v=20260903-1848");
+  --play-bg: url("assets/luftblasen/images/backgrounds/chess-theme-background.webp?v=20261118-2122");
+  --bubble-sprite: url("assets/luftblasen/images/sprites/bubble-chess-sprite.png?v=20261118-2122");
 }
 
 [data-theme="boardgame"] .playfield {

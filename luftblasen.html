@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no">
     <title>Luftblasen</title>
-    <link rel="stylesheet" href="luftblasen.css?v=20260903-1848">
+    <link rel="stylesheet" href="luftblasen.css?v=20261118-2122">
   </head>
   <body class="show-splash" data-theme="classic">
     <main class="game-shell" data-theme="classic">
       <section class="splash-screen" id="splash-screen" aria-labelledby="splash-title">
         <div class="splash-brand">
           <h1 id="splash-title">Luftblasen</h1>
-          <img class="splash-logo" src="assets/luftblasen/images/luftblasen-logo.webp?v=20260903-1848" alt="Luftblasen">
+          <img class="splash-logo" src="assets/luftblasen/images/luftblasen-logo.webp?v=20261118-2122" alt="Luftblasen">
           <p>A modern remake of the original math puzzler.</p>
         </div>
         <div class="splash-theme-grid" id="splash-theme-list" aria-label="Choose theme">
@@ -54,6 +54,12 @@
           <input id="difficulty" type="range" min="1" max="5" value="3">
           <small><b>Easy</b><strong id="difficulty-name">Medium</strong><b>Hard</b></small>
         </label>
+        <details class="high-scores">
+          <summary>Personal best: <strong id="personal-best">No scores yet</strong></summary>
+          <p>Top 10 for the selected difficulty</p>
+          <ol id="high-scores-list"></ol>
+          <small id="storage-note">Scores are saved in this browser.</small>
+        </details>
         <div class="sound-options" aria-label="Audio options">
           <label class="sound-toggle" for="music-enabled">
             <input id="music-enabled" type="checkbox" checked>
@@ -68,7 +74,7 @@
           <button class="start-button" id="start-game" type="button">Start Game</button>
           <button class="how-button" id="how-to-play" type="button">How to Play</button>
         </div>
-        <footer class="splash-version">v<span data-version>20260903-1848</span></footer>
+        <footer class="splash-version">v<span data-version>20261118-2122</span></footer>
         <div class="how-panel hidden" id="how-panel" role="dialog" aria-modal="true" aria-labelledby="how-title">
           <div class="how-card">
             <button class="how-close" id="close-how" type="button" aria-label="Close how to play">&times;</button>
@@ -198,6 +204,8 @@
             <div class="end-screen hidden" id="end-screen" role="dialog" aria-modal="true" aria-labelledby="end-title">
               <div class="end-panel">
                 <h2 id="end-title">Game Over</h2>
+                <p class="end-record" id="end-record" role="status" hidden>New high score!</p>
+                <p class="end-best" id="end-best"></p>
                 <dl class="end-stats">
                   <div class="end-score-stat">
                     <dt>Score</dt>
@@ -220,6 +228,7 @@
                     <dd id="end-popped">0</dd>
                   </div>
                 </dl>
+                <p class="storage-note" id="end-storage-note">Scores are saved in this browser.</p>
                 <p class="end-tip" id="end-tip">Multipliers add score and time. Use them strategically.</p>
                 <div class="end-actions">
                   <button class="end-primary" id="play-again" type="button">Play Again</button>
@@ -233,6 +242,6 @@
       </section>
     </main>
 
-    <script src="luftblasen.js?v=20260903-1848"></script>
+    <script src="luftblasen.js?v=20261118-2122"></script>
   </body>
 </html>

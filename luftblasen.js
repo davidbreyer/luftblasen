@@ -47,20 +47,28 @@ const endPopped = document.querySelector("#end-popped");
 const endTip = document.querySelector("#end-tip");
 const playAgainButton = document.querySelector("#play-again");
 const endChangeThemeButton = document.querySelector("#end-change-theme");
+const personalBest = document.querySelector("#personal-best");
+const highScoresList = document.querySelector("#high-scores-list");
+const storageNote = document.querySelector("#storage-note");
+const endRecord = document.querySelector("#end-record");
+const endBest = document.querySelector("#end-best");
 const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20260903-1848",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20260903-1848",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20260903-1848",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20260903-1848",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20260903-1848",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20260903-1848",
-  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20260903-1848"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20261118-2122",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20261118-2122",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20261118-2122",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20261118-2122",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20261118-2122",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20261118-2122",
+  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20261118-2122"
 };
 
 const playableThemes = Object.keys(themeMusic);
+const storageKey = "luftblasen.progress.v1";
+const scoringVersion = 1;
+const difficultyNames = ["", "Easy", "Casual", "Medium", "Quick", "Hard"];
 const bubbleColors = ["#9ee2ff", "#b9efc4", "#d8c3ff", "#ffe08a", "#a9d8ff"];
 const reduceMotionQuery = window.matchMedia?.("(prefers-reduced-motion: reduce)");
 const gameOverTips = [
@@ -101,6 +109,136 @@ let lastLowTimeTickSecond = null;
 let displayedTimeSecond = null;
 let lastTimerTone = "";
 let lastTimeLow = false;
+let runDifficulty = Number(difficultyInput.value);
+let runTheme = "classic";
+let runSaved = false;
+let newHighScore = false;
+let storageAvailable = true;
+let localProgress = loadLocalProgress();
+
+function validDifficulty(value) {
+  return Number.isInteger(value) && value >= 1 && value <= 5;
+}
+
+function validScore(entry) {
+  return entry && entry.scoringVersion === scoringVersion && validDifficulty(entry.difficulty)
+    && playableThemes.includes(entry.theme)
+    && [entry.score, entry.timePlayedMs, entry.bestStreak, entry.bubblesPopped].every(
+      (value) => Number.isSafeInteger(value) && value >= 0
+    )
+    && Number.isSafeInteger(entry.round) && entry.round >= 1
+    && typeof entry.date === "string" && Number.isFinite(Date.parse(entry.date));
+}
+
+function loadLocalProgress() {
+  const empty = { version: 1, settings: {}, scores: [] };
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(storageKey));
+    if (!saved || saved.version !== 1) {
+      return empty;
+    }
+    const scores = Array.isArray(saved.scores) ? saved.scores.filter(validScore) : [];
+    return {
+      version: 1,
+      settings: saved.settings && typeof saved.settings === "object" ? saved.settings : {},
+      scores: [1, 2, 3, 4, 5].flatMap((difficulty) => scores
+        .filter((entry) => entry.difficulty === difficulty)
+        .sort((a, b) => b.score - a.score).slice(0, 10))
+    };
+  } catch {
+    // Invalid data or unavailable browser storage must never stop the game.
+    return empty;
+  }
+}
+
+function saveLocalProgress() {
+  try {
+    window.localStorage.setItem(storageKey, JSON.stringify(localProgress));
+    storageAvailable = true;
+  } catch {
+    storageAvailable = false;
+  }
+  const note = storageAvailable
+    ? "Scores are saved in this browser."
+    : "Saving is unavailable. Scores will last only until this page is closed.";
+  storageNote.textContent = note;
+  document.querySelector("#end-storage-note").textContent = note;
+}
+
+function saveSettings() {
+  localProgress.settings = {
+    theme: selectedThemeChoice,
+    difficulty: Number(difficultyInput.value),
+    music: musicToggle.checked,
+    pops: popsToggle.checked
+  };
+  saveLocalProgress();
+}
+
+function restoreSettings() {
+  const settings = localProgress.settings;
+  if (playableThemes.includes(settings.theme) || settings.theme === "random") {
+    selectedThemeChoice = settings.theme;
+  }
+  if (validDifficulty(settings.difficulty)) {
+    difficultyInput.value = settings.difficulty;
+  }
+  if (typeof settings.music === "boolean") musicToggle.checked = settings.music;
+  if (typeof settings.pops === "boolean") popsToggle.checked = settings.pops;
+  document.querySelectorAll(".splash-theme").forEach((button) => {
+    button.classList.toggle("active", button.dataset.theme === selectedThemeChoice);
+  });
+  if (selectedThemeChoice !== "random") setActiveTheme(selectedThemeChoice);
+}
+
+function scoresForDifficulty(difficulty) {
+  return localProgress.scores.filter((entry) => entry.difficulty === difficulty);
+}
+
+function updateHighScores() {
+  const difficulty = Number(difficultyInput.value);
+  const scores = scoresForDifficulty(difficulty);
+  personalBest.textContent = scores.length ? scores[0].score.toLocaleString() : "No scores yet";
+  highScoresList.replaceChildren();
+  if (!scores.length) {
+    const item = document.createElement("li");
+    item.textContent = `Finish a game on ${difficultyNames[difficulty]} to set your first score.`;
+    highScoresList.append(item);
+    return;
+  }
+  scores.forEach((entry) => {
+    const item = document.createElement("li");
+    const points = document.createElement("strong");
+    points.textContent = entry.score.toLocaleString();
+    const detail = document.createElement("span");
+    detail.textContent = `Round ${entry.round} · ${new Date(entry.date).toLocaleDateString()}`;
+    item.append(points, detail);
+    highScoresList.append(item);
+  });
+}
+
+function saveCompletedRun() {
+  if (runSaved || !started || !gameOver) return;
+  runSaved = true;
+  const previousBest = scoresForDifficulty(runDifficulty)[0]?.score ?? 0;
+  newHighScore = score > previousBest;
+  const entry = {
+    score,
+    difficulty: runDifficulty,
+    round,
+    timePlayedMs: Math.floor(activePlayTime),
+    bestStreak,
+    bubblesPopped,
+    date: new Date().toISOString(),
+    theme: runTheme,
+    scoringVersion
+  };
+  const scores = [...scoresForDifficulty(runDifficulty), entry]
+    .sort((a, b) => b.score - a.score).slice(0, 10);
+  localProgress.scores = localProgress.scores.filter((item) => item.difficulty !== runDifficulty).concat(scores);
+  saveLocalProgress();
+  updateHighScores();
+}
 
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.45;
@@ -108,6 +246,10 @@ popSound.volume = 0.6;
 
 function startGame() {
   applySelectedTheme();
+  runDifficulty = Number(difficultyInput.value);
+  runTheme = shell.dataset.theme;
+  runSaved = false;
+  newHighScore = false;
   bubbles = [];
   selected = [];
   score = 0;
@@ -153,7 +295,7 @@ function rollRoundTimeLimit() {
 }
 
 function currentPressure() {
-  const baseDifficulty = Number(difficultyInput.value);
+  const baseDifficulty = started ? runDifficulty : Number(difficultyInput.value);
   const roundPressure = Math.min(5.5, Math.max(0, round - 1) * 0.32);
   return {
     baseDifficulty,
@@ -398,6 +540,7 @@ function loseLife(reason) {
     pauseThemeMusic();
     playGameOverSound();
     setMessage(`Game over. Final score: ${score.toLocaleString()}.`);
+    saveCompletedRun();
     showEndScreen();
   } else {
     playLifeLostSound();
@@ -805,6 +948,8 @@ function showEndScreen() {
     return;
   }
   endScore.textContent = score.toLocaleString();
+  endRecord.hidden = !newHighScore;
+  endBest.textContent = `${difficultyNames[runDifficulty]} best: ${(scoresForDifficulty(runDifficulty)[0]?.score ?? 0).toLocaleString()}`;
   endTime.textContent = formatPlayTime(activePlayTime);
   endRound.textContent = round;
   endStreak.textContent = bestStreak.toLocaleString();
@@ -935,20 +1080,26 @@ document.querySelectorAll(".splash-theme").forEach((button) => {
     if (selectedThemeChoice !== "random") {
       setActiveTheme(selectedThemeChoice);
     }
+    saveSettings();
   });
 });
 
 difficultyInput?.addEventListener("input", () => {
   updateDifficultyName();
+  updateHighScores();
+  saveSettings();
 });
 
 musicToggle?.addEventListener("change", () => {
+  saveSettings();
   if (!musicEnabled()) {
     pauseThemeMusic();
   } else if (started && !paused && !gameOver) {
     startThemeMusic();
   }
 });
+
+popsToggle?.addEventListener("change", saveSettings);
 
 pauseButton?.addEventListener("click", () => {
   setPaused(!paused);
@@ -959,8 +1110,7 @@ pauseResumeButton?.addEventListener("click", () => {
 });
 
 function updateDifficultyName() {
-  const names = ["", "Easy", "Casual", "Medium", "Quick", "Hard"];
-  difficultyName.textContent = names[Number(difficultyInput.value)];
+  difficultyName.textContent = difficultyNames[Number(difficultyInput.value)];
 }
 
 startButton?.addEventListener("click", () => {
@@ -1023,6 +1173,9 @@ function exitToSplash() {
 window.selectBubble = selectBubble;
 
 document.body.classList.add("show-splash");
+restoreSettings();
+saveSettings();
 updateDifficultyName();
+updateHighScores();
 updateHud();
 window.requestAnimationFrame(tick);
