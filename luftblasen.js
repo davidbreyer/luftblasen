@@ -56,13 +56,13 @@ const popSound = new Audio("assets/luftblasen/Sounds/pop1.caf");
 const backgroundMusic = new Audio();
 
 const themeMusic = {
-  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20261118-2122",
-  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20261118-2122",
-  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20261118-2122",
-  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20261118-2122",
-  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20261118-2122",
-  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20261118-2122",
-  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20261118-2122"
+  classic: "assets/luftblasen/Music/music-theme-classic.mp3?v=20261118-2123",
+  classical: "assets/luftblasen/Music/music-theme-classical-music.mp3?v=20261118-2123",
+  bavarian: "assets/luftblasen/Music/music-theme-bavarian.mp3?v=20261118-2123",
+  shamrock: "assets/luftblasen/Music/music-theme-shamrock.mp3?v=20261118-2123",
+  boardgame: "assets/luftblasen/Music/music-theme-board-game.mp3?v=20261118-2123",
+  theme1776: "assets/luftblasen/Music/music-theme-1776.mp3?v=20261118-2123",
+  chess: "assets/luftblasen/Music/music-theme-chess.mp3?v=20261118-2123"
 };
 
 const playableThemes = Object.keys(themeMusic);
@@ -849,7 +849,7 @@ function updateTimerHud() {
 function resetTimerHudCache() {
   displayedTimeSecond = null;
   lastTimerTone = "";
-  lastTimeLow = false;
+  lastTimeLow = null;
 }
 
 function setMessage(text) {
